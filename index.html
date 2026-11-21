@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MCQ Quiz Maker</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--n:#12305a;--t1:#00b2a9;--t2:#0088d1;--bg:#eeeff5;--cd:#fff;--tx:#12305a;--mu:#6b7794;--c1:#ff6b8b;--c2:#ff9a8b;--ok:#16a34a;--er:#e11d48;--bd:#2a4a7a}
+[data-th=dark]{--bg:#0f1426;--cd:#1b2240;--tx:#e8ebff;--mu:#9aa3c7;--bd:#4a5a96}
+[data-th=rose]{--bg:#fff1f4;--t1:#ff6b8b;--t2:#ff9a5c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:16px/1.55 'Hind Siliguri',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+#hd{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:8px;padding:12px 14px;color:#fff;font-size:1.2rem;background:linear-gradient(180deg,#4a7090,#0b1f3d);box-shadow:0 3px 14px rgba(0,0,0,.25)}
+#hd.t{background:linear-gradient(90deg,var(--t1),var(--t2))}
+#ht{flex:1;text-align:center}#mb{background:none;border:0;color:#fff;font-size:1.7rem;cursor:pointer;width:36px}
+#sd{position:fixed;top:0;left:0;bottom:0;width:270px;z-index:40;transform:translateX(-100%);transition:.3s;overflow-y:auto;background:#f5f7fc;color:#12305a;box-shadow:6px 0 24px rgba(0,0,0,.25)}
+#sd.open{transform:none}#sd.t{background:linear-gradient(160deg,var(--t1),var(--t2));color:#fff}
+.lg{text-align:center;padding:22px 10px 14px;border-bottom:1px solid rgba(127,127,127,.3)}
+.lg i{display:grid;place-items:center;width:84px;height:84px;margin:0 auto 10px;border-radius:50%;background:#fff;font-size:2.4rem;font-style:normal;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.ins,.tn{font-weight:600;font-size:1.1rem}
+#nv{padding:10px 0}#nv a{display:flex;gap:14px;align-items:center;padding:13px 22px;color:inherit;text-decoration:none;font-size:1.05rem}
+#nv a i{font-style:normal;width:26px;text-align:center}#nv a:hover,#nv a.on{background:rgba(127,127,127,.2)}
+#bk{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:35}
+@media(min-width:900px){#sd{transform:none;box-shadow:none;border-right:1px solid rgba(127,127,127,.3)}#mb,#bk{display:none!important}#hd,#mn{margin-left:270px}}
+.tk #sd,.tk #mb{display:none}.tk #hd,.tk #mn{margin-left:0}
+.pg{max-width:780px;margin:0 auto;padding:16px}
+.ttl{margin:4px auto 18px;padding:12px;text-align:center;font-size:1.5rem;font-weight:500;color:#fff;border-radius:8px;background:linear-gradient(90deg,var(--t2),var(--t1));box-shadow:0 8px 20px rgba(0,136,209,.3)}
+.bt{display:inline-block;border:0;border-radius:8px;padding:12px 28px;font:500 1.1rem 'Hind Siliguri',sans-serif;color:#fff;cursor:pointer;text-decoration:none;text-align:center;background:linear-gradient(90deg,var(--t1),var(--t2));box-shadow:0 6px 16px rgba(0,136,209,.35);transition:.2s}
+.bt:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,136,209,.45)}
+.ob{display:inline-block;border:1.5px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:8px;padding:9px 16px;cursor:pointer;font:inherit;text-decoration:none;margin:3px}
+.ob:disabled{opacity:.4}.ob.g{background:#00b400;color:#fff;border-color:#00b400}.ob.r{color:var(--er);border-color:var(--er)}
+input,select,textarea{width:100%;padding:12px 14px;border:1.5px solid var(--bd);background:var(--cd);color:var(--tx);font:inherit;border-radius:6px;outline:none}
+input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(0,136,209,.25)}
+input[type=checkbox]{width:28px;height:28px;flex:none}
+label.f{display:block;margin:14px 0 4px;font-size:1.05rem}
+.ac{text-align:center;margin:12px 0 22px}.fm{display:grid;gap:14px;max-width:420px;margin:20px auto;text-align:center}
+.mu{color:var(--mu)}.er{color:var(--er);text-align:center;font-weight:500;margin:14px 0}.ok{color:var(--ok)}
+.tc{display:flex;margin:0 0 16px;border-radius:16px;overflow:hidden;background:linear-gradient(90deg,var(--c1),var(--c2) 70%);box-shadow:0 8px 20px rgba(255,107,139,.3);min-height:84px;color:#12305a}
+.tc b{width:50px;display:grid;place-items:center;background:rgba(0,0,0,.12);border-right:1.5px solid #12305a;font-weight:400;font-size:1.2rem}
+.tc a{flex:1;padding:12px 16px;display:flex;align-items:center;color:#12305a;text-decoration:none;font-size:1.2rem}
+.tc button{width:54px;border:0;border-left:1.5px solid #12305a;background:rgba(255,255,255,.25);font-size:1.6rem;cursor:pointer;color:#12305a}
+.li{display:flex;align-items:center;gap:6px;background:var(--cd);padding:10px 14px;border-radius:10px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}.li span{flex:1}
+.kv{width:100%;border-collapse:collapse;margin:8px 0 14px}.kv td,.rt td,.rt th{padding:10px;border:1px solid var(--bd);background:var(--cd)}.rt{width:100%;border-collapse:collapse}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.tabs button{padding:11px 2px;border:1.5px solid var(--bd);border-radius:10px;background:var(--cd);color:var(--tx);font:500 .95rem 'Hind Siliguri',sans-serif;cursor:pointer;transition:.15s}
+.tabs button:hover{border-color:var(--t2)}.tabs button:active{background:rgba(0,136,209,.15)}
+.row2{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}.row2 .ob{flex:1;min-width:100px;padding:16px 8px}
+.tbw{position:sticky;top:54px;z-index:20;background:var(--bg);padding:6px 0 4px;margin:4px 0 8px}
+.tb{display:flex;gap:6px;margin:0 0 6px}.tb button{flex:1;min-height:40px;padding:6px;border:1.5px solid var(--bd);background:var(--cd);color:var(--tx);cursor:pointer;font:inherit;font-size:1.05rem;border-radius:10px;transition:.12s}
+.tb button:hover{border-color:var(--t2)}.tb button:active{background:linear-gradient(90deg,var(--t1),var(--t2));color:#fff}
+.tb.m{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;-webkit-overflow-scrolling:touch}.tb.m button{flex:none;min-width:42px;padding:6px 10px}
+.tb.m .sp{flex:none;width:1px;background:var(--bd);margin:4px 2px}
+.tbl{font-size:.82rem;color:var(--mu)}.tbl b{color:var(--t2)}
+.pvw{margin:0 0 10px;padding:8px 12px;border-radius:10px;border:1.5px dashed var(--t2);background:var(--cd)}.pvw:empty{display:none}
+.mf{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 3px;font-size:.95em;line-height:1.25}
+.mf>span:first-child{border-bottom:1.5px solid currentColor;padding:0 4px}.mf>span:last-child{padding:0 4px}
+.mr{white-space:nowrap}.mr>span{border-top:1.5px solid currentColor;padding:0 2px;margin-left:1px}.mr sup{font-size:.6em}
+.tb .mf{font-size:.7rem;margin:0}
+.orow{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qr{display:flex;background:var(--cd);border:1px solid var(--bd);margin-bottom:12px;border-radius:10px;overflow:hidden}.qr>div:first-child{flex:1;padding:14px}
+.qr p{margin:6px 0}.ra{font-weight:600}.qa{display:flex;flex-direction:column;width:56px;border-left:1px solid var(--bd)}.qa button{flex:1;border:0;background:none;font-size:1.3rem;cursor:pointer}
+.sc{display:flex;justify-content:space-between;align-items:center;margin:16px 0 10px;padding:10px 14px;border-radius:10px;font-weight:600;background:linear-gradient(90deg,rgba(0,178,169,.2),rgba(0,136,209,.2))}
+img{max-width:100%;border-radius:8px;margin:8px 0}
+.st{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin:14px 0}.st div{background:var(--cd);padding:12px;border-radius:12px;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.08)}.st b{display:block;font-size:1.5rem}
+.sc2{text-align:center;font-size:3rem;font-weight:600;background:linear-gradient(90deg,var(--t1),var(--t2));-webkit-background-clip:text;background-clip:text;color:transparent}.sc2 small{font-size:1.2rem}
+.dot{display:inline-block;width:16px;height:16px;border-radius:50%}
+.bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.tm{font-weight:600;padding:5px 14px;border-radius:99px;background:var(--cd);border:1px solid var(--bd)}
+.qc{background:var(--cd);padding:16px;border-radius:14px;margin-bottom:14px;box-shadow:0 4px 16px rgba(0,0,0,.08)}.qt{font-size:1.15rem;font-weight:500;margin-bottom:8px}
+.op{display:flex;gap:12px;align-items:center;padding:12px 14px;margin:8px 0;border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;transition:.15s}.op:hover{border-color:var(--t2)}
+.op span{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(0,136,209,.15);font-weight:600}
+.op.sel{border-color:var(--t2);background:linear-gradient(90deg,rgba(0,178,169,.2),rgba(0,136,209,.2))}.op.ok{background:rgba(22,163,74,.2);border-color:var(--ok)}.op.bad{background:rgba(225,29,72,.18);border-color:var(--er)}
+.ex{margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(245,158,11,.15)}
+.row{display:flex;gap:10px;justify-content:space-between;margin:14px 0}.pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:7px}
+.pal button{height:40px;border-radius:10px;border:1px solid var(--bd);background:var(--cd);color:var(--tx);cursor:pointer;font:inherit}.pal .d{background:var(--ok);color:#fff}.pal .c{outline:2px solid var(--t2)}
+.ov{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+.sh{background:var(--bg);width:100%;max-width:520px;max-height:85vh;overflow-y:auto;padding:16px;border-radius:20px 20px 0 0}.sh h3{margin-bottom:10px}.sh .ob{display:block;width:100%;text-align:left;margin:8px 0}
+@media(min-width:700px){.ov{align-items:center}.sh{border-radius:20px}}
+#toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,90px);background:#111;color:#fff;padding:10px 20px;border-radius:12px;transition:.3s;z-index:90}#toast.on{transform:translate(-50%,0)}
+pre{background:var(--cd);padding:10px;border-radius:8px;white-space:pre-wrap;font-size:.9rem;margin:8px 0}
+@media print{#hd,#sd,#bk,.bt,.ob,.qa,.tabs{display:none!important}#hd,#mn{margin-left:0!important}body{background:#fff;color:#000}}
+#svs{position:fixed;right:12px;bottom:12px;z-index:80;font-size:.85rem;background:var(--cd);border:1px solid var(--bd);padding:3px 12px;border-radius:99px;display:none;color:var(--tx)}
+</style>
+</head>
+<body>
+<aside id="sd"><div id="lg" class="lg"></div><nav id="nv" onclick="mo(0)"></nav></aside><div id="bk" onclick="mo(0)"></div>
+<header id="hd"><button id="mb" onclick="mo(1)">☰</button><span id="ht"></span><span style="width:36px"></span></header>
+<main id="mn"></main><div id="toast"></div><div id="svs"></div>
+<script>
+const D=document,$=s=>D.querySelector(s);
+const E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const RT=s=>E(s).replace(/&lt;(\/?)(b|i|u|sup|sub)&gt;/g,'<$1$2>')
+ .replace(/&lt;f&gt;([\s\S]*?)\|([\s\S]*?)&lt;\/f&gt;/g,'<span class="mf"><span>$1</span><span>$2</span></span>')
+ .replace(/&lt;r&gt;([\s\S]*?)&lt;\/r&gt;/g,'<span class="mr">√<span>$1</span></span>')
+ .replace(/&lt;r3&gt;([\s\S]*?)&lt;\/r3&gt;/g,'<span class="mr"><sup>3</sup>√<span>$1</span></span>')
+ .replace(/\n/g,'<br>');
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const bn2en=s=>String(s).replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d));
+const mk=(name,pw,cat,qs=[])=>({id:uid(),name,pw,cat,desc:'',time:10,mark:1,neg:0,showRes:1,tries:0,shuffle:0,display:'one',opt:'num',th:'',who:'any',info:0,status:'published',qs,nq:0});
+const S=(q,o,a,e)=>({t:'mc',q,o,a:[a],e:e||''});
+const API='https://script.google.com/macros/s/AKfycbwEUndKwUS2Gb-BYYt-G2wD8ayYj85Nw5zAaGHALCr8BE_ReLuSwq8Yw8iThgDdBxPX/exec';
+let DB=null,BANK=[],TT=null,STUC=null,ST={m:''},SQ={},svT=0,busy=0,pend=0;
+const DEV=(()=>{let d='';try{d=localStorage.getItem('qm_dev')||'';if(!d){d=uid();localStorage.setItem('qm_dev',d)}}catch(e){d=uid()}return d})();
+async function api(a,d){if(/PASTE/.test(API)){toast('index.html-এ API লিংক বসানো হয়নি');throw new Error('noapi')}
+ let r;try{const x=await fetch(API,{method:'POST',body:JSON.stringify({...d,a,tk:sessionStorage.getItem('qm_tk')||''})});r=await x.json()}catch(e){if(a!='sub'&&a!='saveMeta'&&a!='saveQs')toast('নেটওয়ার্ক সমস্যা — আবার চেষ্টা করুন');throw e}
+ if(r&&r.auth){sessionStorage.removeItem('qm_tk');DB=null;const er=new Error('auth');er.auth=1;loginPg();toast('সেশন শেষ — আবার লগইন করুন');throw er}
+ return r}
+const metaStr=()=>JSON.stringify({inst:DB.inst,cf:DB.cf,cats:DB.cats,tests:DB.tests.map(t=>{const o={...t};if(t.qs)o.nq=cnt(t);delete o.qs;delete o.results;return o})});
+const setSt=x=>{const e=$('#svs');if(!e)return;e.style.display=x?'block':'none';e.textContent=x};
+function sv(){pend=1;clearTimeout(svT);svT=setTimeout(flush,600);setSt('⏳ সংরক্ষণ হচ্ছে…')}
+async function flush(){if(!DB){pend=0;return}if(busy){svT=setTimeout(flush,400);return}busy=1;pend=0;
+ try{const m=metaStr();if(m!==ST.m){const r=await api('saveMeta',{meta:JSON.parse(m)});if(r.err)throw 0;ST.m=m}
+  for(const t of DB.tests){if(!t.qs)continue;const q=JSON.stringify(t.qs);if(SQ[t.id]!==q){const r=await api('saveQs',{id:t.id,qs:t.qs});if(r.err)throw 0;SQ[t.id]=q}}
+  if(!pend){setSt('✔ সংরক্ষিত');setTimeout(()=>{if(!pend&&!busy)setSt('')},1500)}}
+ catch(e){if(e&&e.auth){pend=0;setSt('')}else{pend=1;setSt('⚠️ সংরক্ষণ ব্যর্থ — আবার চেষ্টা হবে');svT=setTimeout(flush,5000)}}
+ busy=0}
+addEventListener('beforeunload',e=>{if(pend||busy){e.preventDefault();e.returnValue=''}});
+async function ensureQs(t){if(t.qs)return;const r=await api('getQs',{id:t.id});let cur='';const q=r.qs||[];q.forEach(x=>{if(x.t=='sec'){x.id=x.id||uid();cur=x.id}else if(x.sid===undefined)x.sid=cur});t.qs=q;norm(t);SQ[t.id]=JSON.stringify(t.qs)}
+async function init(){D.body.classList.add('tk');$('#hd').className='t';$('#ht').textContent='MCQ Quiz Maker';$('#mn').innerHTML='<div class="pg"><p class="mu" style="text-align:center;margin-top:40px">লোড হচ্ছে…</p></div>';
+ let r;try{r=await api('boot')}catch(e){if(e&&e.auth)return;return $('#mn').innerHTML='<div class="pg"><p class="er">সার্ভারের সাথে সংযোগ হয়নি</p><div class="ac"><button class="bt" onclick="init()">আবার চেষ্টা করুন</button></div></div>'}
+ if(!r||!r.meta)return;DB=r.meta;DB.user=r.user;DB.cf=DB.cf||'All';BANK=r.bank||[];SQ={};STUC=null;ST.m=metaStr();route()}
+function norm(t){t.qs.forEach(x=>{if(x.t=='sec')x.id=x.id||uid()});const ids=new Set(t.qs.filter(x=>x.t=='sec').map(x=>x.id));
+ t.qs.forEach(x=>{if(x.t!='sec'&&!ids.has(x.sid))x.sid=''});const out=t.qs.filter(x=>x.t!='sec'&&!x.sid);
+ t.qs.filter(x=>x.t=='sec').forEach(sc=>{out.push(sc);t.qs.forEach(x=>{if(x.t!='sec'&&x.sid==sc.id)out.push(x)})});t.qs.splice(0,t.qs.length,...out)}
+function migr(){DB.tests.forEach(t=>{let cur='';t.qs.forEach(x=>{if(x.t=='sec'){x.id=x.id||uid();cur=x.id}else if(x.sid===undefined)x.sid=cur});norm(t)})}
+const secs=t=>t.qs.filter(q=>q.t=='sec');
+const LIM=200,cnt=t=>t.qs?t.qs.filter(q=>q.t!='sec').length:(t.nq||0),room=t=>LIM-cnt(t);
+function secSel(id,cur,tt){const S=secs(tt||CT);if(!S.length)return '';return `<label class="f">📂 এমসিকিউ প্রশ্নটি কোন সেকশনের আন্ডারে রাখতে চান?</label><select id="${id}" style="margin-bottom:10px"><option value="x" ${cur=='x'?'selected':''}>— সেকশন নির্বাচন করুন —</option><option value="" ${cur===''?'selected':''}>কোনো সেকশন নয়</option>${S.map(x=>`<option value="${x.id}" ${x.id==cur?'selected':''}>${E(x.q)}</option>`).join('')}</select>`}
+function secVal(id){const e=$('#'+id);if(!e)return '';if(e.value=='x'){toast('কোন সেকশনের আন্ডারে রাখবেন তা নির্বাচন করুন');return null}return e.value}
+let CT=null,DR=null,QT='mc',QI=null,QIMG='',R=null,TM=0,PV=[],TB='';
+const tst=id=>DB.tests.find(t=>t.id===id);
+const lnk=id=>location.href.split('#')[0]+'#/take/'+id;
+function tlf(id){const e=$('#tlk');if(e)e.textContent=lnk(id)}
+function tlc(id){cp(lnk(id))}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)}
+const go=h=>{location.hash=h};
+function cp(s){(navigator.clipboard?navigator.clipboard.writeText(s):Promise.reject()).then(()=>toast('Copied ✔')).catch(()=>prompt('Copy:',s))}
+function mo(o){$('#sd').classList.toggle('open',!!o);$('#bk').style.display=o?'block':'none'}
+function csv(name,rows){const s='\ufeff'+rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\n');const a=D.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:'text/csv'}));a.download=name+'.csv';a.click()}
+function sheet(title,items){const o=D.createElement('div');o.className='ov';o.innerHTML=`<div class="sh"><h3>${title}</h3></div>`;const s=o.firstChild;
+ if(typeof items=='string')s.insertAdjacentHTML('beforeend',items);else items.forEach(([l,f,c])=>{const b=D.createElement('button');b.className='ob '+(c||'');b.innerHTML=l;b.onclick=()=>{o.remove();f&&f()};s.appendChild(b)});
+ const c=D.createElement('button');c.className='ob';c.textContent='Close';c.onclick=()=>o.remove();s.appendChild(c);o.onclick=e=>{if(e.target===o)o.remove()};D.body.appendChild(o)}
+const ttl=x=>`<h1 class="ttl">${x}</h1>`;
+
+/* ===== shell & routing ===== */
+function shell(title,menu,t,body){
+ $('#ht').textContent=title;$('#hd').className=t?'t':'';$('#sd').className=t?'t':'';
+ const h=location.hash||'#/';
+ $('#lg').innerHTML=t?`<div class="tn">${E(t.name)}</div>`:`<i>🎯</i><div class="ins">${E(DB.inst)} ✅</div>`;
+ $('#nv').innerHTML=menu.map(m=>`<a href="${m[2]}" class="${h===m[2]||(t&&m[2].length>TB.length&&h.startsWith(m[2]))?'on':''}"><i>${m[0]}</i>${m[1]}</a>`).join('');
+ $('#mn').innerHTML=`<div class="pg">${body}</div>`;mo(0);scrollTo(0,0)}
+const IM=[['🏠','Institution','#/'],['👤','Profile','#/profile'],['🗂️','Category','#/cat'],['↕️','Reorder','#/reorder'],['✏️','Practice','#/practice'],['🎓','Students','#/students'],['🗃️','Question Bank','#/qbank'],['🛟','Support','#/support'],['🚪','Logout','#/logout']];
+const inst=(title,body)=>{TB='';shell(title,IM,null,body)};
+function route(){clearInterval(TM);D.body.classList.remove('tk');D.body.dataset.th='';
+ const p=(location.hash.slice(2)||'').split('/'),v=p[0];
+ if(v==='take'&&p[2]!=='p')return take(p[1],false);
+ if(v==='logout'){sessionStorage.removeItem('qm_tk');DB=null;STUC=null;location.hash='#/';return}
+ if(!authed())return loginPg();
+ if(!DB)return init();
+ if(v==='take')return take(p[1],true);
+ if(v==='t'){const t=tst(p[1]);if(!t)return go('#/');const h=location.hash;if(!t.qs)$('#mn').innerHTML='<div class="pg"><p class="mu" style="text-align:center;margin-top:40px">লোড হচ্ছে…</p></div>';return ensureQs(t).then(()=>{if(location.hash==h)adm(t,p[2]||'dash',p[3])}).catch(()=>{})}
+ ({'':home,create:pCreate,cat:pCat,reorder:pRe,practice:pPr,profile:pPf,support:pSp,students:()=>pStu(p[1]),qbank:()=>pBank(p[1])}[v]||home)()}
+
+/* ===== Admin login ===== */
+const authed=()=>!!sessionStorage.getItem('qm_tk');
+function loginPg(){D.body.classList.add('tk');D.body.dataset.th='';$('#hd').className='t';$('#ht').textContent='Admin Login';mo(0);const k="if(event.key=='Enter')doLogin()";
+ $('#mn').innerHTML=`<div class="pg"><div class="ttl">🔐 অ্যাডমিন লগইন</div><div class="fm"><input id="lu" placeholder="Username" autocomplete="username" onkeydown="${k}"><input id="lp" type="password" placeholder="Password" autocomplete="current-password" onkeydown="${k}"><button class="bt" id="lb" onclick="doLogin()">Login</button></div><p id="le" class="er"></p></div>`;scrollTo(0,0)}
+async function doLogin(){const u=$('#lu').value.trim(),pw=$('#lp').value,e=$('#le'),b=$('#lb');if(!u||!pw)return e.textContent='ইউজারনেম ও পাসওয়ার্ড দিন';b.disabled=1;b.textContent='…';e.textContent='';
+ try{const r=await api('login',{u,p:pw});if(r.err){e.textContent=r.err;b.disabled=0;b.textContent='Login';return}sessionStorage.setItem('qm_tk',r.tk);DB=null;if(location.hash.startsWith('#/take')||!location.hash)location.hash='#/';route()}catch(x){b.disabled=0;b.textContent='Login';e.textContent='সার্ভারের সাথে সংযোগ হয়নি'}}
+async function chPw(){const r=await api('chpw',{o:$('#cp0').value,n:$('#cp1').value,u:$('#cu').value.trim()});if(r.err)return toast(r.err);sessionStorage.setItem('qm_tk',r.tk);DB.user=$('#cu').value.trim()||DB.user;toast('পাসওয়ার্ড পরিবর্তিত ✔');pPf()}
+const HI=st=>{const h=(st.hist||[]).slice().sort((a,b)=>b.date-a.date);return `<div class="sc"><span>📊 পরীক্ষার ইতিহাস</span><span>${h.length}</span></div>`+(h.length?`<div style="overflow-x:auto"><table class="rt"><tr><th>টেস্ট</th><th>স্কোর</th><th>✔</th><th>✘</th><th>তারিখ</th></tr>${h.map(x=>`<tr><td>${E(x.tn)}</td><td>${x.score}/${x.tot}</td><td>${x.c}</td><td>${x.w}</td><td>${new Date(x.date).toLocaleDateString('bn-BD')}</td></tr>`).join('')}</table></div>`:'<p class="mu" style="text-align:center">এখনো কোনো পরীক্ষা নেই।</p>')+'<br>'};
+addEventListener('hashchange',route);
+
+/* ===== institution pages ===== */
+function home(){
+ const l=DB.tests.filter(t=>DB.cf==='All'||t.cat===DB.cf);
+ inst('Institution Panel',`<div class="ac"><a class="bt" href="#/create">Create Test</a></div>
+ <select style="margin-bottom:22px" onchange="DB.cf=this.value;sv();home()"><option ${DB.cf==='All'?'selected':''}>All</option>${DB.cats.map(c=>`<option ${c===DB.cf?'selected':''}>${E(c)}</option>`).join('')}</select>
+ ${l.map((t,i)=>`<div class="tc"><b>${i+1}</b><a href="#/t/${t.id}">${E(t.name)}${t.status=='published'?'':' 🔒'}</a><button onclick="tmenu('${t.id}')">⋮</button></div>`).join('')||'<p class="mu" style="text-align:center">No tests here. Tap “Create Test”.</p>'}`)}
+function tmenu(id){const t=tst(id),lk=location.href.split('#')[0]+'#/take/'+id;
+ sheet(E(t.name),[['⚙️ Open Admin Panel',()=>go('#/t/'+id)],['▶ Take Test (Exam)',()=>go('#/take/'+id)],['✏️ Preview (Practice)',()=>go('#/take/'+id+'/p')],['🔗 Copy Test Link',()=>cp(lnk(id))],
+ ['🗂️ Move to Category',()=>sheet('Move to',DB.cats.map(c=>[E(c),()=>{t.cat=c;sv();home()}]))],
+ ['📄 Duplicate',async()=>{await ensureQs(t);const n=JSON.parse(JSON.stringify(t));n.id=uid();n.name+=' (Copy)';DB.tests.push(n);sv();home()}],
+ ['🗑️ Delete',()=>{if(confirm('Delete this test and all results?')){DB.tests=DB.tests.filter(x=>x.id!=id);sv();home()}},'r']])}
+function pCreate(){inst('Create Test',`<div class="fm"><input id="n" placeholder="Enter Test Name"><input id="p" placeholder="Enter Admin Password"><select id="c">${DB.cats.map(c=>`<option>${E(c)}</option>`).join('')}</select><button class="bt" onclick="saveT()">Save</button></div>`)}
+function saveT(){const n=$('#n').value.trim();if(!n)return toast('Enter test name');const t=mk(n,$('#p').value.trim()||Math.floor(1e5+Math.random()*9e5)+'',$('#c').value);DB.tests.push(t);sv();go('#/t/'+t.id)}
+function pCat(){inst('Category',ttl('Category')+DB.cats.map((c,i)=>`<div class="li"><span>${E(c)}</span><button class="ob" onclick="rn(${i})">✏️</button><button class="ob r" onclick="dc(${i})">🗑️</button></div>`).join('')+`<div class="fm"><input id="nc" placeholder="New category name"><button class="bt" onclick="ac()">Add Category</button></div>`)}
+function ac(){const v=$('#nc').value.trim();if(v&&!DB.cats.includes(v)){DB.cats.push(v);sv();pCat()}}
+function rn(i){const v=(prompt('Rename category',DB.cats[i])||'').trim();if(!v)return;DB.tests.forEach(t=>{if(t.cat==DB.cats[i])t.cat=v});if(DB.cf==DB.cats[i])DB.cf=v;bRenCat(DB.cats[i],v);DB.cats[i]=v;sv();pCat()}
+function dc(i){if(DB.cats.length<2)return toast('Keep at least one category');if(!confirm('Delete category? Tests move to the first category.'))return;const old=DB.cats[i];bRenCat(old,'');DB.cats.splice(i,1);DB.tests.forEach(t=>{if(t.cat==old)t.cat=DB.cats[0]});DB.cf='All';sv();pCat()}
+function pRe(){inst('Reorder',ttl('Reorder')+DB.tests.map((t,i)=>`<div class="li"><span>${i+1}. ${E(t.name)}</span><button class="ob" onclick="mv(${i},-1)">▲</button><button class="ob" onclick="mv(${i},1)">▼</button></div>`).join(''))}
+function mv(i,d){const j=i+d;if(j<0||j>=DB.tests.length)return;[DB.tests[i],DB.tests[j]]=[DB.tests[j],DB.tests[i]];sv();pRe()}
+function pPr(){inst('Practice',ttl('Practice')+(DB.tests.map((t,i)=>`<div class="tc"><b>${i+1}</b><a href="#/take/${t.id}/p">${E(t.name)}</a><button>▶</button></div>`).join('')||'<p class="mu">No tests.</p>'))}
+function pPf(){inst('Profile',ttl('Profile')+`<div class="fm"><input id="in" value="${E(DB.inst)}"><button class="bt" onclick="DB.inst=$('#in').value.trim()||DB.inst;sv();toast('Saved ✔');pPf()">Save</button></div><h3 style="text-align:center;margin-top:24px">🔐 অ্যাডমিন লগইন পরিবর্তন</h3><div class="fm"><input id="cu" placeholder="Username" value="${E(DB.user||'')}"><input id="cp0" type="password" placeholder="বর্তমান পাসওয়ার্ড"><input id="cp1" type="password" placeholder="নতুন পাসওয়ার্ড"><button class="bt" onclick="chPw()">Update</button></div>`)}
+function pSp(){inst('Support',ttl('Support')+`<div class="qc"><b>Backup & Restore</b><p class="mu">সব ডাটা আপনার Google Drive-এর “QuizMaker_Data” ফোল্ডারে সংরক্ষিত থাকে। এখান থেকে টেস্ট, প্রশ্ন, ফলাফল ও শিক্ষার্থীর তথ্যের ব্যাকআপ নিতে পারবেন। (প্রশ্নব্যাংক Drive-এ আলাদাভাবে সংরক্ষিত — ব্যাকআপে নেই।)</p>
+ <button class="ob" onclick="bk()">⬇ Download Backup</button><button class="ob" onclick="rs()">⬆ Restore Backup</button></div>
+ <div class="qc"><b>Tips</b><p>1. Create a test → Add questions (or paste many via CSV/Import).<br>2. Settings → set time, marks, status = Published.<br>3. Copy the test link and share it — শিক্ষার্থীরা লিংক খুলেই পরীক্ষা দিতে পারবে।</p></div>`)}
+let SF='grp';
+let STUV=0;
+async function pStu(id){const h=location.hash;if(!STUC||!id){inst('Students',ttl('Students')+'<p class="mu" style="text-align:center">Loading…</p>');try{STUC=(await api('getStu')).stu||[]}catch(e){return}if(location.hash!=h)return}pStu0(id)}
+function pStu0(id){const st=id&&STUC.find(x=>x.id==id);
+ if(!st)return inst('Students',ttl('Students')+(STUC.length?STUC.slice().sort((a,b)=>b.items.length-a.items.length).map(s=>`<div class="li"><a href="#/students/${s.id}" style="flex:1;color:inherit;text-decoration:none"><b>${E(s.name)}</b><br><small class="mu">${E(s.info||'')} · পরীক্ষা: ${(s.hist||[]).length} · ভুল প্রশ্ন: ${s.items.length}</small></a></div>`).join(''):'<p class="mu" style="text-align:center">এখনো কোনো শিক্ষার্থী পরীক্ষা দেয়নি।</p>'));
+ const tn={};st.items.forEach(x=>tn[x.tid]=x.tn);if(SF!='grp'&&SF!='all'&&!tn[SF])SF='grp';
+ const by={};st.items.filter(x=>SF=='grp'||SF=='all'||x.tid==SF).forEach(x=>(by[x.tn]=by[x.tn]||[]).push(x));
+ const flat=st.items.slice().sort((a,b)=>b.date-a.date);
+ const sel=`<select style="margin:8px 0 14px" onchange="SF=this.value;pStu('${st.id}')"><option value="grp" ${SF=='grp'?'selected':''}>টেস্ট অনুযায়ী ভাগ করে (সব টেস্ট)</option><option value="all" ${SF=='all'?'selected':''}>টেস্ট ছাড়া — সব ভুল একসাথে</option>${Object.keys(tn).map(k=>`<option value="${k}" ${SF==k?'selected':''}>শুধু: ${E(tn[k])}</option>`).join('')}</select>`;
+ inst('Student',ttl(E(st.name))+`<p class="mu">${E(st.info||'')} · মোট ভুল প্রশ্ন: ${st.items.length}</p><div class="ac"><a class="ob" href="#/students">← সব শিক্ষার্থী</a><button class="ob r" onclick="dstu('${st.id}')">🗑️ সব মুছুন</button></div>`+HI(st)+sel+
+ (SF=='all'?flat.map((x,k)=>rw(x,k,st.id)).join(''):Object.keys(by).map(n=>`<div class="sc"><span>📂 ${E(n)}</span><span>${by[n].length}</span></div>`+by[n].map((x,k)=>rw(x,k,st.id)).join('')).join('')||'<p class="mu" style="text-align:center">কোনো ভুল প্রশ্ন নেই।</p>'))}
+function rw(e,k,sid){const q=e.q,a=e.g;const b=q.t=='mc'?q.o.map((o,j)=>`<div class="op ${q.a.includes(j)?'ok':a&&a.includes&&a.includes(j)?'bad':''}"><span>${j+1}</span>${RT(o)}</div>`).join(''):`<p>Answer: <b>${E(a||'—')}</b></p><p class="ok">Correct: ${E(q.a.join(' / '))}</p>`;
+ return `<div class="qc"><div class="qt">${k+1}. ${RT(q.q)}</div>${q.img?`<img src="${E(q.img)}">`:''}${b}${q.e?`<div class="ex">💡 ${RT(q.e)}</div>`:''}<small class="mu">${new Date(e.date).toLocaleDateString()} · ভুল করেছে ${e.n||1} বার</small> <button class="ob r" onclick="dwi('${sid}','${e.id}')">🗑️</button></div>`}
+async function dwi(sid,id){await api('stuItemDel',{sid,id});const st=STUC.find(x=>x.id==sid);if(st)st.items=st.items.filter(x=>x.id!=id);pStu0(sid)}
+async function dstu(id){if(confirm('এই শিক্ষার্থীর সব ভুল প্রশ্ন মুছবেন?')){await api('stuDel',{id});STUC=null;go('#/students')}}
+async function bk(){toast('ব্যাকআপ তৈরি হচ্ছে…');const r=await api('export');const a=D.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(r.data)],{type:'application/json'}));a.download='quiz-backup.json';a.click()}
+function rs(){const f=D.createElement('input');f.type='file';f.accept='.json';f.onchange=()=>{const r=new FileReader();r.onload=async()=>{try{const d=JSON.parse(r.result);if(!d.meta||!Array.isArray(d.meta.tests))throw 0;if(!confirm('বর্তমান সব ডাটা ব্যাকআপ ফাইলের ডাটা দিয়ে বদলে যাবে। চালিয়ে যাবেন?'))return;toast('রিস্টোর হচ্ছে…');const x=await api('import',{data:d});if(x.err)throw 0;toast('Restored ✔');DB=null;route()}catch(e){toast('Invalid file')}};r.readAsText(f.files[0])};f.click()}
+
+/* ===== test admin ===== */
+async function adm(t,sec,arg){CT=t;TB='#/t/'+t.id;const b=TB,M=[['🏠','Dashboard',b],['➕','Add Question',b+'/add'],['👁️','View Questions',b+'/view'],['⚙️','Settings',b+'/set'],['📊','View Results',b+'/res'],['↩️','Back Account','#/']];
+ const h0=location.hash,x=await ({dash:pDash,add:pAdd,view:pView,set:pSet,res:pRes,imp:pImp}[sec]||pDash)(t,arg);if(location.hash!==h0)return;shell('MCQ Quiz Maker',M,t,x[0]);if(x[1])x[1]()}
+function pDash(t){setTimeout(()=>tlf(t.id),0);const lk=location.href.split('#')[0]+'#/take/'+t.id,nq=t.qs.filter(q=>q.t!='sec').length;
+ return [ttl('Dashboard')+`<p>This is the admin panel of this test</p><p><b>Test Name :</b> ${E(t.name)}</p><p><b>Test Password :</b> ${E(t.pw)}</p>
+ <div class="st"><div><b>${nq}</b>Questions</div><div><b>${t.status=='published'?'🟢':'🔴'}</b>${t.status}</div></div>
+ <p id="tlk" style="word-break:break-all;color:#1a0dab">লিংক তৈরি হচ্ছে…</p><div class="ac"><button class="bt" onclick="tlc('${t.id}')">Click here to copy test link</button><br><br><a class="ob" href="#/take/${t.id}/p">▶ Preview (Practice)</a><a class="ob" href="#/take/${t.id}">▶ Take as Exam</a></div>
+ <p>1. Add questions.<br>2. View questions. If any edit require.<br>3. Adjust Settings & set status to Published.<br>4. Share test link with candidates.<br>5. View test results.</p>
+ <p style="color:#d6006f;margin-top:12px">সব ডাটা Google Drive-এ সংরক্ষিত হয় (পরিবর্তনের কয়েক সেকেন্ডের মধ্যে অটো-সেভ)।</p>`]}
+function pAdd(t,arg){const e=arg!==undefined?t.qs[+arg]:null;QI=e?+arg:null;QT=e?e.t:'mc';QIMG=e?e.img||'':'';
+ DR=e?{q:e.q,o:[...(e.o||[]),'','','','',''].slice(0,5),a:(e.a||[]).filter(x=>typeof x=='number'),w:e.t=='sa'?e.a.join(', '):'',e:e.e||'',s:e.sid||''}:{q:'',o:['','','','',''],a:[],w:'',e:'',s:secs(t).length?'x':''};
+ return [formHTML()]}
+const rf=()=>{$('#mn').innerHTML='<div class="pg">'+formHTML()+'</div>'};
+function sq(k){rd();QT=k;rf()}
+function rd(){if(!$('#fq'))return;DR.q=$('#fq').value;if(QT=='mc'){DR.o=[0,1,2,3,4].map(j=>$('#o'+j).value);DR.a=[0,1,2,3,4].filter(j=>$('#k'+j).checked)}if($('#fs'))DR.s=$('#fs').value;if($('#fw'))DR.w=$('#fw').value;if($('#fe'))DR.e=$('#fe').value}
+function formHTML(){const T=(k,l)=>`<button class="ob ${QT==k?'g':''}" onclick="sq('${k}')">${l}</button>`;
+ return ttl(QI!==null?'Edit Question':'Add Question')+`<div class="tabs"><button onclick="txt()">Text</button><button onclick="go(TB+'/imp')">CSV</button><button onclick="pimg()">Image</button><button onclick="limg()">Link</button><button onclick="qbk()">QB</button></div>
+ <div class="row2">${T('mc','Multiple Choice')}${T('sa','Short Answer')}${T('sec','Add Section')}</div>
+ ${QT=='sec'?'':secSel('fs',DR.s)}<textarea id="fq" class="rtf" data-lb="Question" rows="${QT=='sec'?2:5}" placeholder="${QT=='sec'?'Section title':'Question'}">${E(DR.q)}</textarea>
+ ${QT=='sec'?'':`<div class="tbw" onmousedown="event.preventDefault()"><div class="tb">${TG.map(x=>`<button onclick="rtw('${x[0]}')">${x[1]}</button>`).join('')}</div><div class="tb m"><button title="ভগ্নাংশ" onclick="rtw('f')"><span class="mf"><span>a</span><span>b</span></span></button><button title="বর্গমূল" onclick="rtw('r')">√x</button><button title="ঘনমূল" onclick="rtw('r3')">∛x</button><i class="sp"></i>${[...'π∞±×÷≠≈≤≥°∑∫θαβΔ∠△∴∈∪∩⊂→∥⟂'].map(c=>`<button onclick="ins('${c}')">${c}</button>`).join('')}</div><div class="tbl" id="tbl">Applies to: <b>Question</b></div></div><div id="pvw" class="pvw"></div>`}
+ ${QIMG?`<div class="ac"><img src="${E(QIMG)}"><br><button class="ob r" onclick="QIMG='';rd();rf()">Remove image</button></div>`:''}
+ ${QT=='mc'?DR.o.map((o,j)=>`<div class="orow"><input id="o${j}" class="rtf" data-lb="Option ${j+1}" placeholder="Option${j+1}" value="${E(o)}"><input type="checkbox" id="k${j}" ${DR.a.includes(j)?'checked':''}></div>`).join(''):''}
+ ${QT=='sa'?`<input id="fw" placeholder="Correct answer(s), separate with comma" value="${E(DR.w)}" style="margin-bottom:10px">`:''}
+ ${QT!='sec'?`<textarea id="fe" class="rtf" data-lb="Explanation" rows="3" placeholder="Explanation (optional)">${E(DR.e)}</textarea>`:''}
+ <div class="ac" style="margin-top:16px"><button class="bt" onclick="saveQ()">Save Question</button></div>`}
+const TG=[['b','<b>B</b>'],['i','<i>I</i>'],['u','<u>U</u>'],['sup','x²'],['sub','x₂']];let AF=null;
+const fld=()=>AF&&D.body.contains(AF)?AF:$('#fq');
+function ins(t,c){const x=fld();if(!x)return;const s=x.selectionStart,e=x.selectionEnd;x.setRangeText(t,s,e,'end');if(c!=null){x.setSelectionRange(s+c,s+c)}x.focus();upv()}
+function rtw(g){const x=fld();if(!x)return;const sel=x.value.slice(x.selectionStart,x.selectionEnd);
+ if(g=='f')return ins(`<f>${sel}|</f>`,sel?sel.length+4:3);
+ ins(`<${g}>${sel}</${g}>`,sel?null:g.length+2)}
+function upv(){const x=fld(),p=$('#pvw');if(p)p.innerHTML=x&&x.value.trim()?RT(x.value):''}
+D.addEventListener('focusin',e=>{const t=e.target;if(t.classList&&t.classList.contains('rtf')){AF=t;const l=$('#tbl');if(l)l.innerHTML='Applies to: <b>'+t.dataset.lb+'</b>';upv()}});
+D.addEventListener('input',e=>{if(e.target.classList&&e.target.classList.contains('rtf'))upv()});
+const TQS="1. প্রশ্ন লিখুন\n1) অপশন এক\n2) অপশন দুই\n3) অপশন তিন\n4) অপশন চার\nAns: 2\nExp: ব্যাখ্যা (ঐচ্ছিক)\n\n2. দ্বিতীয় প্রশ্ন\nক) অপশন ক\nখ) অপশন খ\nগ) অপশন গ\nঘ) অপশন ঘ\nAns: ক";
+function txt(){rd();sheet('📝 Quick Add (Text)',`<p class="mu">নিচের ফরম্যাটে এক বা একাধিক প্রশ্ন পেস্ট করুন। দুই প্রশ্নের মাঝে একটি ফাঁকা লাইন দিন।</p><pre>${E(TQS)}</pre><button class="ob" onclick="$('#tq').value=TQS;tqp()">⤵ নমুনা বসান</button>${secSel('tss','x')}<textarea id="tq" rows="10" placeholder="এখানে প্রশ্ন লিখুন / পেস্ট করুন" oninput="tqp()" style="margin-top:8px"></textarea><p id="tqi" class="mu" style="margin:8px 0"></p><button class="bt" style="width:100%;text-align:center" onclick="tqa()">➕ Add Questions</button><p class="mu" style="font-size:.88rem;margin-top:10px">অপশন: 1-5, a-e বা ক-ঙ · একাধিক উত্তর: <code>Ans: 1,3</code> · Exp: ঐচ্ছিক · সূত্র: <code>&lt;f&gt;a|b&lt;/f&gt;</code> (ভগ্নাংশ), <code>&lt;r&gt;x&lt;/r&gt;</code> (root), <code>&lt;sup&gt;2&lt;/sup&gt;</code><br>এক লাইনে: প্রশ্ন|অপশন১|অপশন২|অপশন৩|অপশন৪|সঠিক নম্বর|ব্যাখ্যা</p>`)}
+function tqp(){const p=parseQ($('#tq').value.trim()),g=p.filter(x=>!x.bad).length;$('#tqi').innerHTML=p.length?`✅ ${g} টি ঠিক আছে`+(p.length-g?` · ⚠️ ${p.length-g} টিতে ভুল (বাদ যাবে)`:''):''}
+function tqa(){const p=parseQ($('#tq').value.trim()),g=p.filter(x=>!x.bad);if(!g.length)return toast('কোনো সঠিক প্রশ্ন পাওয়া যায়নি');
+ const sc=secVal('tss');if(sc===null)return;if(g.length>room(CT))return toast(bn());g.forEach(x=>CT.qs.push({t:'mc',q:x.q,o:x.o,a:x.a,e:x.e,sid:sc}));norm(CT);sv();const o=$('.ov');if(o)o.remove();toast(g.length+' টি প্রশ্ন যুক্ত হয়েছে ✔'+(p.length>g.length?' ('+(p.length-g.length)+' টি বাদ)':''));go(TB+'/view')}
+function pimg(){rd();const f=D.createElement('input');f.type='file';f.accept='image/*';f.onchange=()=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,640/im.width),c=D.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);QIMG=c.toDataURL('image/jpeg',.75);rf()};im.src=r.result};r.readAsDataURL(f.files[0])};f.click()}
+function limg(){const u=prompt('Image URL (https://...)');if(u){rd();QIMG=u.trim();rf()}}
+function qbk(){
+ sheet('🗃️ QB — ক্যাটাগরি নির্বাচন',[...DB.cats.map(c=>['🗂️ '+E(c)+` (${DB.tests.filter(t=>t.cat==c&&t.id!=CT.id).length} টি বিষয়)`,()=>qbT(c)]),['🗃️ Question Bank (সংরক্ষিত বিষয়)',qbBank]])}
+function qbT(c){const l=DB.tests.filter(t=>t.cat==c&&t.id!=CT.id);
+ sheet('🗂️ '+E(c)+' — বিষয় নির্বাচন',[...l.map(t=>['📚 '+E(t.name)+` (${cnt(t)} টি প্রশ্ন)`,async()=>{await ensureQs(t);qbP(t.id)}]),['← ক্যাটাগরি',qbk]]);if(!l.length)$('.sh h3').insertAdjacentHTML('afterend','<p class="mu">এই ক্যাটাগরিতে কোনো বিষয় নেই।</p>')}
+let QX=null;
+function qbP(tid){const t=tst(tid);QX={t,f:'*',sel:new Set(),qs:t.qs.map((q,i)=>[q,i]).filter(x=>x[0].t!='sec')};
+ cl();const o=D.createElement('div');o.className='ov';o.innerHTML='<div class="sh" id="qxs"></div>';o.onclick=e=>{if(e.target===o)o.remove()};D.body.appendChild(o);
+ const S=t.qs.filter(x=>x.t=='sec'),no=QX.qs.some(x=>!x[0].sid);
+ $('#qxs').innerHTML=`<h3>📚 ${E(t.name)} (${QX.qs.length})</h3>`+(S.length?`<label class="f">📂 এই টেস্টের কোন সেকশনের প্রশ্ন দেখতে চান?</label><select id="qxf" style="margin-bottom:10px" onchange="QX.f=this.value;qxL()"><option value="*">সব সেকশন (${QX.qs.length})</option>${S.map(x=>`<option value="${x.id}">${E(x.q)} (${QX.qs.filter(y=>y[0].sid==x.id).length})</option>`).join('')}${no?`<option value="n">সেকশনবিহীন (${QX.qs.filter(y=>!y[0].sid).length})</option>`:''}</select>`:'')+
+ `<div style="display:flex;gap:8px;margin-bottom:10px"><button class="ob" style="margin:0;flex:1;text-align:center" onclick="qxA(1)">☑️ সবগুলো সিলেক্ট</button><button class="ob" style="margin:0;flex:1;text-align:center" onclick="qxA(0)">⬜ বাদ দিন</button></div><div id="qxl"></div><div style="position:sticky;bottom:-16px;background:var(--bg);padding:10px 0 4px"><button class="bt" id="qxb" style="width:100%;text-align:center" onclick="qxAdd()"></button></div>`;qxL()}
+const qxV=()=>QX.qs.filter(x=>QX.f=='*'||(QX.f=='n'?!x[0].sid:x[0].sid==QX.f));
+function qxL(){const v=qxV();$('#qxl').innerHTML=v.map(([q,i],n)=>`<label class="qr" style="cursor:pointer"><div style="flex:none;padding:14px 0 0 12px"><input type="checkbox" style="width:22px;height:22px;padding:0" ${QX.sel.has(i)?'checked':''} onchange="qxT(${i},this.checked)"></div><div><b>${n+1}.</b> ${RT(q.q)}${q.img?`<img src="${E(q.img)}">`:''}${q.t=='mc'?q.o.map((x,j)=>`<p>${j+1}. ${RT(x)}</p>`).join(''):''}<p class="ra">Right Answer : ${q.t=='mc'?q.a.map(y=>y+1).join(', '):E(q.a.join(' / '))}</p></div></label>`).join('')||'<p class="mu" style="text-align:center">কোনো প্রশ্ন নেই।</p>';qxC()}
+const qxC=()=>{const b=$('#qxb');if(b)b.textContent=`📋 সিলেক্টেড ${QX.sel.size} টি কপি করুন`};
+function qxT(i,on){on?QX.sel.add(i):QX.sel.delete(i);qxC()}
+function qxA(on){qxV().forEach(x=>on?QX.sel.add(x[1]):QX.sel.delete(x[1]));D.querySelectorAll('#qxl input').forEach(c=>c.checked=!!on);qxC()}
+function qxAdd(){const g=QX.qs.filter(x=>QX.sel.has(x[1])).map(x=>x[0]);if(!g.length)return toast('কোনো প্রশ্ন সিলেক্ট করা হয়নি');if(g.length>room(CT))return toast(bn());
+ const sm={};QX.t.qs.forEach(x=>{if(x.t=='sec')sm[x.id]=x.q});const mp={};
+ g.forEach(q=>{const c=JSON.parse(JSON.stringify(q));delete c.id;if(q.sid&&sm[q.sid]){if(!mp[q.sid]){let e=CT.qs.find(y=>y.t=='sec'&&y.q==sm[q.sid]);if(!e){e={t:'sec',q:sm[q.sid],id:uid()};CT.qs.push(e)}mp[q.sid]=e.id}c.sid=mp[q.sid]}else c.sid='';CT.qs.push(c)});
+ norm(CT);sv();cl();toast(g.length+' টি প্রশ্ন কপি হয়েছে ✔');go(TB+'/view')}
+async function qbBank(){let sb=[];try{sb=await bSubs()}catch(e){}const o=DB.tests.filter(x=>x.id!=CT.id&&x.qs.length),top=sb.filter(x=>!x.par&&x.tot);
+ if(!top.length)return toast('Question Bank-এ কোনো প্রশ্ন নেই');
+ const names=[...new Set([...DB.cats,...top.map(x=>x.cat||'')])],cs=names.map(c=>[c,top.filter(x=>(x.cat||'')==c)]).filter(x=>x[1].length);
+ sheet('🗃️ Question Bank — ক্যাটাগরি নির্বাচন',[...cs.map(([c,l])=>['🗂️ '+E(c||'অশ্রেণিবদ্ধ')+` (${l.length} বিষয়)`,()=>qbSub(c)])])}
+async function qbSub(c){const sb=await bSubs(),l=sb.filter(x=>!x.par&&x.tot&&(x.cat||'')==c);
+ sheet('🗂️ '+E(c||'অশ্রেণিবদ্ধ')+' — বিষয় নির্বাচন',[...l.map(x=>['📚 '+E(x.name)+` (${x.tot})`,()=>qbS(x.id,c)]),['← ক্যাটাগরি',qbk]])}
+async function qbS(sid,c){const all=await bSubs(),s=all.find(x=>x.id==sid),kids=all.filter(x=>x.par==sid&&x.n),b=(l,f)=>`<button class="ob" onclick="${f}">${l}</button>`;
+ sheet('📚 '+E(s.name)+` (${s.tot} টি প্রশ্ন)`,secSel('qbs','x')+`<button class="ob g" onclick="qbAll('${sid}')">➕ পুরো বিষয়ের সব প্রশ্ন যোগ করুন (${s.tot})</button><p class="mu" style="margin:10px 0 0">অথবা নির্দিষ্ট প্রশ্ন বেছে নিন:</p>`+(s.n?b(kids.length?`📂 মূল প্রশ্ন (${s.n})`:`☑️ প্রশ্ন বেছে নিন (${s.n})`,`qbQ('${sid}')`):'')+kids.map(k=>b('📖 '+E(k.name)+` (${k.n})`,`qbQ('${k.id}')`)).join('')+b('← বিষয়সমূহ',`cl();qbSub('${(c??s.cat)||''}')`))}
+async function qbAll(sid){const sc=secVal('qbs');if(sc===null)return;const all=await bSubs(),s=all.find(x=>x.id==sid);if(!s||!s.tot)return toast('কোনো প্রশ্ন নেই');if(s.tot>room(CT))return toast(bn());
+ const g=await bGet([sid,...all.filter(x=>x.par==sid).map(x=>x.id)],s.tot,false);g.forEach(x=>CT.qs.push({t:'mc',q:x.q,o:x.o,a:x.a,e:x.e,img:x.img,sid:sc}));norm(CT);sv();cl();toast(g.length+' টি প্রশ্ন যোগ হয়েছে ✔');go(TB+'/view')}
+let QP=null;
+async function qbQ(sid){cl();QP={sid,s:'',p:0,sel:new Map(),cur:[],sc:'x'};const o=D.createElement('div');o.className='ov';o.innerHTML='<div class="sh" id="qps"></div>';o.onclick=e=>{if(e.target===o)o.remove()};D.body.appendChild(o);qpR()}
+async function qpR(){const s=$('#qps');if(!s)return;const e0=$('#qbs');if(e0)QP.sc=e0.value;
+ const all=await bSubs(),sb=all.find(x=>x.id==QP.sid),off=QP.p*30,{out,more}=await bPage(QP.sid,off,30,QP.s.toLowerCase());QP.cur=out;
+ s.innerHTML=`<h3>☑️ ${E(sb?sb.lb:'')} (${sb?sb.n:0})</h3>${secSel('qbs',QP.sc,CT)}<input id="qpq" placeholder="🔎 খুঁজে Enter চাপুন" value="${E(QP.s)}" style="margin-bottom:10px" onkeydown="if(event.key=='Enter'){QP.s=this.value;QP.p=0;qpR()}">
+ <div style="display:flex;gap:8px;margin-bottom:10px"><button class="ob" style="margin:0;flex:1;text-align:center" onclick="qpPg(1)">☑️ এই পৃষ্ঠার সব</button><button class="ob" style="margin:0;flex:1;text-align:center" onclick="qpPg(0)">⬜ বাদ দিন</button></div>`+
+ (out.map((x,i)=>`<label class="qr" style="cursor:pointer"><div style="flex:none;padding:14px 0 0 12px"><input type="checkbox" style="width:22px;height:22px;padding:0" ${QP.sel.has(x.id)?'checked':''} onchange="qpT('${x.id}',this.checked)"></div><div><b>${off+i+1}.</b> ${RT(x.q)}${x.o.map((o,j)=>`<p>${j+1}. ${RT(o)}</p>`).join('')}<p class="ra">Right Answer : ${x.a.map(y=>y+1).join(', ')}</p></div></label>`).join('')||'<p class="mu" style="text-align:center">কোনো প্রশ্ন নেই।</p>')+
+ `<div class="row"><button class="ob" style="width:auto;margin:0" ${QP.p?'':'disabled'} onclick="QP.p--;qpR()">← Prev</button><span class="mu">পৃষ্ঠা ${QP.p+1}</span><button class="ob" style="width:auto;margin:0" ${more?'':'disabled'} onclick="QP.p++;qpR()">Next →</button></div>
+ <div style="position:sticky;bottom:-16px;background:var(--bg);padding:10px 0 4px"><button class="bt" id="qpb" style="width:100%;text-align:center" onclick="qpAdd()"></button></div>`;qpC();s.scrollTop=0}
+const qpC=()=>{const b=$('#qpb');if(b)b.textContent=`➕ সিলেক্টেড ${QP.sel.size} টি যোগ করুন`};
+function qpT(id,on){if(on){const x=QP.cur.find(y=>y.id==id);if(x)QP.sel.set(id,x)}else QP.sel.delete(id);qpC()}
+function qpPg(on){QP.cur.forEach(x=>on?QP.sel.set(x.id,x):QP.sel.delete(x.id));D.querySelectorAll('#qps .qr input').forEach(c=>c.checked=!!on);qpC()}
+function qpAdd(){const sc=secVal('qbs');if(sc===null)return;const g=[...QP.sel.values()];if(!g.length)return toast('কোনো প্রশ্ন সিলেক্ট করা হয়নি');if(g.length>room(CT))return toast(bn());
+ g.forEach(x=>CT.qs.push({t:'mc',q:x.q,o:x.o,a:x.a,e:x.e,img:x.img,sid:sc}));norm(CT);sv();cl();toast(g.length+' টি প্রশ্ন যোগ হয়েছে ✔');go(TB+'/view')}
+async function bCat(sid){const all=await bSubs(),s=all.find(x=>x.id==sid);sheet('🗂️ ক্যাটাগরি নির্বাচন',[...DB.cats.map(c=>[E(c)+((s.cat||'')==c?' ✔':''),()=>bSetCat(sid,c)]),['অশ্রেণিবদ্ধ'+(s.cat?'':' ✔'),()=>bSetCat(sid,'')]])}
+async function bSetCat(sid,c){await api('bCat',{id:sid,c});const x=BANK.find(y=>y.id==sid);if(x)x.cat=c;toast('ক্যাটাগরি সেট হয়েছে ✔');pBank(sid)}
+async function bRenCat(a,b){BANK.forEach(x=>{if(x.cat==a)x.cat=b});try{await api('bRenCat',{a,b})}catch(e){}}
+function saveQ(){rd();const q=DR.q.trim();if(!q)return toast('Write the question');if(QT!='sec'&&DR.s=='x')return toast('কোন সেকশনের আন্ডারে রাখবেন তা নির্বাচন করুন');let o;
+ if(QT=='sec')o={t:'sec',q,id:QI!==null&&CT.qs[QI].id?CT.qs[QI].id:uid()};
+ else if(QT=='sa'){const a=DR.w.split(',').map(x=>x.trim()).filter(Boolean);if(!a.length)return toast('Enter correct answer');o={t:'sa',q,a,e:DR.e,img:QIMG,sid:DR.s}}
+ else{const keep=[];DR.o.forEach((x,j)=>{if(x.trim())keep.push(j)});if(keep.length<2)return toast('Add at least 2 options');const a=keep.map((j,n)=>DR.a.includes(j)?n:-1).filter(n=>n>=0);if(!a.length)return toast('Tick the correct answer');o={t:'mc',q,o:keep.map(j=>DR.o[j].trim()),a,e:DR.e,img:QIMG,sid:DR.s}}
+ if(QI===null&&o.t!='sec'&&cnt(CT)>=LIM)return toast(`প্রতি টেস্টে সর্বোচ্চ ${LIM} টি প্রশ্ন`);if(QI!==null){CT.qs[QI]=o;norm(CT);sv();toast('Updated ✔');go(TB+'/view')}else{CT.qs.push(o);norm(CT);sv();toast('Saved ✔');QIMG='';DR={q:'',o:['','','','',''],a:[],w:'',e:'',s:o.t=='sec'?o.id:o.sid};rf();scrollTo(0,0)}}
+function pView(t){let n=0;const nq=t.qs.filter(q=>q.t!='sec').length;
+ const list=t.qs.map((q,i)=>{if(q.t=='sec')return `<div class="sc"><span>📂 ${E(q.q)}</span><span><button class="ob" onclick="eq(${i})">✏️</button><button class="ob r" onclick="dq(${i})">🗑️</button></span></div>`;n++;
+  return `<div class="qr"><div><b>Q${n}.</b> ${RT(q.q)}${q.img?`<img src="${E(q.img)}">`:''}${q.t=='mc'?q.o.map((o,j)=>`<p>${j+1}. ${RT(o)}</p>`).join(''):''}<p class="ra">Right Answer : ${q.t=='mc'?q.a.map(x=>x+1).join(', '):E(q.a.join(' / '))}</p></div><div class="qa"><button onclick="eq(${i})">✏️</button><button onclick="dq(${i})">🗑️</button></div></div>`}).join('');
+ return [ttl('View Questions')+`<table class="kv"><tr><td>Test Name :</td><td>${E(t.name)}</td></tr><tr><td>Total Questions</td><td>${nq} / ${LIM}</td></tr></table>
+ <div class="ac"><button class="ob" onclick="print()">Export PDF</button><button class="ob" onclick="ecsv()">Export CSV</button><button class="ob" onclick="toBank()">🗃️ Save to Question Bank</button><br><button class="ob r" style="margin-top:12px" onclick="daq()">Delete All Questions</button></div>${list||'<p class="mu" style="text-align:center">No questions yet.</p>'}`]}
+const eq=i=>go(TB+'/add/'+i);
+function dq(i){const x=CT.qs[i],sc=x.t=='sec';if(confirm(sc?'এই সেকশন ও এর সব প্রশ্ন মুছবেন?':'Delete this item?')){if(sc)CT.qs=CT.qs.filter(y=>y!==x&&y.sid!=x.id);else CT.qs.splice(i,1);sv();adm(CT,'view')}}
+function daq(){if(confirm('Delete ALL questions?')){CT.qs=[];sv();adm(CT,'view')}}
+function ecsv(){csv(CT.name,[['Question','Opt1','Opt2','Opt3','Opt4','Opt5','Answer','Explanation'],...CT.qs.filter(q=>q.t!='sec').map(q=>[q.q,...[0,1,2,3,4].map(j=>(q.o||[])[j]||''),q.t=='mc'?q.a.map(x=>x+1).join(','):q.a.join('|'),q.e||''])])}
+function pImp(){PV=[];return [ttl('Import Questions')+`${secSel('ips','x')}<textarea id="ip" rows="14" placeholder="Paste Content Here"></textarea><div class="ac" style="margin-top:14px"><button class="bt" onclick="prev()">Preview</button></div><div id="pv"></div>
+ <details><summary class="ob">Help ❗</summary><p>Separate questions with a blank line:</p><pre>1. প্রশ্ন লিখুন
+1) অপশন এক
+2) অপশন দুই
+3) অপশন তিন
+4) অপশন চার
+Ans: 2
+Exp: ব্যাখ্যা (ঐচ্ছিক)</pre><p>Options may be 1-5, a-e or ক-ঙ. Multiple answers: <code>Ans: 1,3</code>. Or one line each:</p><pre>প্রশ্ন|অপশন১|অপশন২|অপশন৩|অপশন৪|সঠিক নম্বর|ব্যাখ্যা</pre></details>`]}
+function parseQ(s){const L={'1':0,'2':1,'3':2,'4':3,'5':4,a:0,b:1,c:2,d:3,e:4,'ক':0,'খ':1,'গ':2,'ঘ':3,'ঙ':4},ix=x=>L[bn2en(x).trim().toLowerCase()];
+ return s.split(/\n\s*\n/).map(b=>b.trim()).filter(Boolean).map(b=>{let q='',o=[],a=[],e='';
+  if(!b.includes('\n')&&/[|\t]/.test(b)){const p=b.split(/[|\t]/).map(x=>x.trim());q=p[0];o=p.slice(1,5).filter(Boolean);a=String(p[5]||'').split(/[,\s]+/).map(ix).filter(x=>x!==undefined);e=p[6]||''}
+  else b.split('\n').map(x=>x.trim()).forEach((l,i)=>{let m;
+   if(m=l.match(/^(ans(?:wer)?|উত্তর|সঠিক(?: উত্তর)?)\s*[:：\-]\s*(.+)$/i))a=m[2].split(/[,\s]+/).map(ix).filter(x=>x!==undefined);
+   else if(m=l.match(/^(exp(?:lanation)?|ব্যাখ্যা)\s*[:：\-]\s*(.+)$/i))e=m[2];
+   else if(i>0&&(m=l.match(/^\(?([1-5a-eA-Eক-ঙ১-৫])[\.\)\:।]\s*(.+)$/)))o.push(m[2]);
+   else if(!o.length)q+=(q?'\n':'')+l.replace(/^(Q\s*)?[\d১-৯]+[\.\)\:]\s*/i,'')});
+  return{t:'mc',q,o,a,e,bad:!q||o.length<2||!a.length||a.some(x=>x>=o.length)}})}
+function prev(){PV=parseQ($('#ip').value);const g=PV.filter(x=>!x.bad).length;
+ $('#pv').innerHTML=PV.length?`<p><b class="ok">${g} valid</b>${PV.length-g?` · <b class="er" style="display:inline">${PV.length-g} need fixing</b>`:''}</p>`+PV.map((x,i)=>`<div class="qr"><div>${x.bad?'⚠️':'✅'} <b>${i+1}.</b> ${E(x.q)||'<i>(no question)</i>'}${x.o.map((o,j)=>`<p class="${x.a.includes(j)?'ok':''}">${j+1}. ${RT(o)}</p>`).join('')}</div></div>`).join('')+(g?`<div class="ac"><button class="bt" onclick="addPV()">Add ${g} Questions</button></div>`:''):'<p class="mu">Nothing found.</p>'}
+function addPV(){const sc=secVal('ips');if(sc===null)return;if(PV.filter(x=>!x.bad).length>room(CT))return toast(bn());PV.filter(x=>!x.bad).forEach(x=>CT.qs.push({t:'mc',q:x.q,o:x.o,a:x.a,e:x.e,sid:sc}));norm(CT);sv();toast('Imported ✔');go(TB+'/view')}
+const F=(l,id,v,t='text')=>`<label class="f">${l}</label><input id="${id}" type="${t}" value="${E(v)}">`;
+const SL=(l,id,opts,cur)=>`<label class="f">${l}</label><select id="${id}">${opts.map(o=>`<option value="${o[0]}" ${String(o[0])==String(cur)?'selected':''}>${o[1]}</option>`).join('')}</select>`;
+const YN=[[1,'Yes'],[0,'No']];
+function pSet(t){return [ttl('Settings')+F('Test Name','s_name',t.name)+`<label class="f">Test Description</label><textarea id="s_desc" rows="4">${E(t.desc)}</textarea>`+F('Admin Password','s_pw',t.pw)+F('Test Time (Minutes) — 0 = no timer','s_time',t.time,'number')+F('Mark for each correct answer','s_mark',t.mark,'number')+F('Negative Mark for each wrong answer','s_neg',t.neg,'number')
+ +SL('Students can view their results after the test ?','s_sr',YN,t.showRes)+SL('How many times can students take the test ?','s_tr',[[1,'One Time'],[2,'Two Times'],[3,'Three Times'],[5,'Five Times'],[0,'Unlimited']],t.tries)+SL('Shuffle Questions ?','s_sh',YN.slice().reverse(),t.shuffle)
+ +SL('Display Questions','s_dp',[['one','One by one'],['all','All at once']],t.display)+SL('Question Options','s_op',[['num','Numeric'],['alpha','Alphabetic']],t.opt)+SL('Themes','s_th',[['','Default'],['dark','Dark'],['rose','Rose']],t.th)
+ +SL('Who can take your test ?','s_wh',[['any','Anyone (Browser Tracking)'],['anon','Anonymous (no name)']],t.who)+SL('Do you need additional info field ?','s_in',YN.slice().reverse(),t.info)+SL('Test Status','s_st',[['published','Published'],['closed','Closed']],t.status)
+ +`<div class="ac" style="margin-top:22px"><button class="bt" onclick="saveS()">Save</button></div>`]}
+function saveS(){const t=CT,g=i=>$('#'+i).value;Object.assign(t,{name:g('s_name').trim()||t.name,desc:g('s_desc'),pw:g('s_pw'),time:+g('s_time')||0,mark:+g('s_mark')||0,neg:+g('s_neg')||0,showRes:+g('s_sr'),tries:+g('s_tr'),shuffle:+g('s_sh'),display:g('s_dp'),opt:g('s_op'),th:g('s_th'),who:g('s_wh'),info:+g('s_in'),status:g('s_st')});sv();toast('Settings saved ✔')}
+async function pRes(t){const r0=await api('getRes',{id:t.id});t.results=r0.res||[];const nq=t.qs.filter(q=>q.t!='sec').length,tot=+(nq*t.mark).toFixed(2),rs=[...t.results].reverse();
+ return [ttl('View Results')+`<div class="ac"><button class="ob" onclick="print()">Export PDF</button><button class="ob" onclick="rcsv()">Export CSV</button><br><button class="ob r" style="margin-top:12px" onclick="delRes()">Delete All Results</button></div>
+ <p><i class="dot" style="background:#22a722"></i> Submitted (Completed)<br><i class="dot" style="background:#ff7f8f"></i> Running / Quit</p><p class="mu" style="margin:10px 0">ℹ️ Click a candidate’s name to view their answer sheet.</p>
+ <table class="rt"><tr><th>SN</th><th>Candidate Name, ID & Info</th><th>Score</th><th></th></tr>${rs.map((r,i)=>`<tr><td>${i+1}</td><td><a href="#" onclick="shR('${r.id}');return false">${E(r.name)}</a><br><small class="mu">${E(r.info||'')} ${new Date(r.date).toLocaleString()}</small></td><td>${r.status=='done'?r.score+' / '+tot:'–'}</td><td><i class="dot" style="background:${r.status=='done'?'#22a722':'#ff7f8f'}"></i></td></tr>`).join('')}</table>`]}
+async function delRes(){if(!confirm('Delete all results?'))return;await api('delRes',{id:CT.id});adm(CT,'res')}
+function rcsv(){csv(CT.name+'-results',[['Name','Info','Score','Correct','Wrong','Skipped','Status','Date'],...CT.results.map(r=>[r.name,r.info,r.score,r.c,r.w,r.u,r.status,new Date(r.date).toLocaleString()])])}
+function shR(id){const t=CT,r=t.results.find(x=>x.id==id);sheet(E(r.name),t.qs.map((q,i)=>[q,i]).filter(x=>x[0].t!='sec').map(([q,i],k)=>rv(t,i,r.ans[i],k)).join('')||'')}
+function rv(t,qi,a,k){const q=t.qs[qi];const b=q.t=='mc'?q.o.map((o,j)=>`<div class="op ${q.a.includes(j)?'ok':a&&a.includes&&a.includes(j)?'bad':''}"><span>${j+1}</span>${RT(o)}</div>`).join(''):`<p>Answer: <b>${E(a||'—')}</b></p><p class="ok">Correct: ${E(q.a.join(' / '))}</p>`;
+ return `<div class="qc"><div class="qt">${k+1}. ${RT(q.q)}</div>${q.img?`<img src="${E(q.img)}">`:''}${b}${q.e?`<div class="ex">💡 ${RT(q.e)}</div>`:''}</div>`}
+
+/* ===== candidate: take test / practice ===== */
+async function take(id,prac){D.body.classList.add('tk');D.body.dataset.th='';$('#sd').className='';$('#hd').className='t';$('#ht').textContent='MCQ Quiz';mo(0);
+ const set=h=>{$('#mn').innerHTML='<div class="pg">'+h+'</div>';scrollTo(0,0)},h0=location.hash;
+ set('<p class="mu" style="text-align:center;margin-top:40px">লোড হচ্ছে…</p>');let t;
+ try{if(prac){t=tst(id);if(t)await ensureQs(t)}else t=(await api('pub',{id})).t}catch(e){if(e&&e.auth)return;return set(ttl('সংযোগ হয়নি')+'<div class="ac"><button class="bt" onclick="route()">আবার চেষ্টা করুন</button></div>')}
+ if(location.hash!=h0)return;TT=t;D.body.dataset.th=t?t.th:'';$('#ht').textContent=t?t.name:'MCQ Quiz';
+ if(!t)return set(ttl('Test not found')+'<p class="mu" style="text-align:center">টেস্টটি পাওয়া যায়নি।</p>'+(authed()?'<div class="ac"><a class="bt" href="#/">Home</a></div>':''));
+ const n=t.qs.filter(q=>q.t!='sec').length;let blk='';
+ if(!prac&&t.status!='published')blk='This test is closed.';else if(!n)blk='This test has no questions.';
+ set(ttl(E(t.name))+`<p>${E(t.desc).replace(/\n/g,'<br>')}</p><div class="st"><div><b>${n}</b>Questions</div><div><b>${t.time||'∞'}</b>Minutes</div><div><b>+${t.mark}</b>Correct</div><div><b>−${t.neg}</b>Wrong</div></div>
+ ${blk?`<p class="er">${blk}</p>`:`<div class="fm">${!prac&&t.who!='anon'?'<p class="mu" style="margin-bottom:-6px">আপনার নির্দিষ্ট নাম বা কোড লিখুন — প্রতিবার একই নাম/কোড ব্যবহার করুন, তাহলে আপনার সব পরীক্ষার তথ্য একসাথে জমা থাকবে।</p><input id="cn" placeholder="Student Name / Code" value="'+E(localStorage.getItem('qm_code')||'')+'">':''}${!prac&&t.info?'<input id="ci" placeholder="Additional Info (ID / Phone)">':''}<button class="bt" onclick="startT('${t.id}',${!!prac})">${prac?'Start Practice':'Start Test'}</button></div>`}
+ ${prac?`<div class="ac"><a class="ob" href="#/t/${t.id}">← Admin panel</a></div>`:''}`)}
+async function startT(id,prac){const t=TT,nm=$('#cn')?$('#cn').value.trim():'',inf=$('#ci')?$('#ci').value.trim():'';
+ if(!prac&&t.who!='anon'&&!nm)return toast('আপনার নাম বা কোড দিন');
+ if(!prac){if(nm)try{localStorage.setItem('qm_code',nm)}catch(e){}
+  const b=$('.fm .bt'),rb=()=>{if(b){b.disabled=0;b.textContent='Start Test'}};if(b){b.disabled=1;b.textContent='…'}
+  try{const r=await api('start',{id:t.id,name:nm||'Anonymous',dev:DEV});if(r.err){toast(r.err);rb();return}}catch(e){rb();return}}
+ let q=t.qs.map((x,i)=>i).filter(i=>t.qs[i].t!='sec');if(t.shuffle){const g={};q.forEach(i=>(g['k'+(t.qs[i].sid||'')]=g['k'+(t.qs[i].sid||'')]||[]).push(i));q=Object.values(g).flatMap(a=>a.sort(()=>Math.random()-.5))}
+ R={t,prac,q,ans:{},chk:{},i:0,left:t.time*60,rid:uid(),nm:nm||'Anonymous',inf};
+ if(t.time)TM=setInterval(()=>{R.left--;tk();if(R.left<=0)finT(1)},1000);drawT()}
+function tk(){const e=$('#tm');if(e){const m=Math.floor(R.left/60),s=R.left%60;e.textContent='⏱ '+m+':'+String(s).padStart(2,'0');e.style.color=R.left<=30?'var(--er)':''}}
+const hasA=x=>{const a=R.ans[x];return a&&a.length};
+function drawT(){const t=R.t,one=t.display!='all',n=R.q.length;
+ $('#mn').innerHTML=`<div class="pg"><div class="bar"><b>${one?`Question ${R.i+1} / ${n}`:`${n} Questions`}</b>${t.time?'<span class="tm" id="tm"></span>':''}</div>`+
+ (one?qh(R.i)+`<div class="row"><button class="ob" onclick="R.i--;drawT()" ${R.i?'':'disabled'}>← Prev</button>${R.i<n-1?`<button class="bt" onclick="R.i++;drawT()">Next →</button>`:`<button class="bt" style="background:var(--ok)" onclick="finT()">Submit</button>`}</div><div class="pal">${R.q.map((x,k)=>`<button class="${hasA(x)?'d':''} ${k==R.i?'c':''}" onclick="R.i=${k};drawT()">${k+1}</button>`).join('')}</div>${R.i<n-1?`<div class="ac" style="margin-top:16px"><button class="ob r" onclick="finT()">Submit Test</button></div>`:''}`
+  :R.q.map((x,k)=>qh(k)).join('')+`<div class="ac"><button class="bt" style="background:var(--ok)" onclick="finT()">Submit</button></div>`)+'</div>';tk()}
+function qh(k){const t=R.t,qi=R.q[k],q=t.qs[qi],a=R.ans[qi],pv=k?t.qs[R.q[k-1]]:null,sx=q.sid?t.qs.find(y=>y.t=='sec'&&y.id==q.sid):null,hd=sx&&(t.display!='all'||!pv||pv.sid!=q.sid)?`<div class="sc" style="margin:-4px 0 10px">📂 ${E(sx.q)}</div>`:'';const lock=R.prac&&(R.chk[qi]||(q.t=='mc'&&a&&a.length>=q.a.length));let b='';
+ if(q.t=='mc')b=(q.a.length>1?`<p class="mu">Select ${q.a.length} answers</p>`:'')+q.o.map((o,j)=>{const s=a&&a.includes(j);let c=s?'sel':'';if(lock){if(q.a.includes(j))c='ok';else if(s)c='bad'}return `<div class="op ${c}" onclick="pk(${qi},${j})"><span>${t.opt=='alpha'?'ABCDE'[j]:j+1}</span>${RT(o)}</div>`}).join('');
+ else b=`<input value="${E(a||'')}" placeholder="Type your answer" oninput="R.ans[${qi}]=this.value" ${lock?'disabled':''}>`+(R.prac&&!lock?`<button class="ob" style="margin-top:8px" onclick="R.chk[${qi}]=1;rq(${qi})">Check</button>`:'')+(lock?`<p class="ok">Answer: ${E(q.a.join(' / '))}</p>`:'');
+ return `<div class="qc" id="q${qi}">${hd}<div class="qt">${k+1}. ${RT(q.q)}</div>${q.img?`<img src="${E(q.img)}">`:''}${b}${lock&&q.e?`<div class="ex">💡 ${RT(q.e)}</div>`:''}</div>`}
+function rq(qi){if(R.t.display=='all')$('#q'+qi).outerHTML=qh(R.q.indexOf(qi));else drawT()}
+function pk(qi,j){const q=R.t.qs[qi];if(R.prac&&(R.chk[qi]||(R.ans[qi]&&R.ans[qi].length>=q.a.length)))return;let a=R.ans[qi]||[];
+ if(q.a.length>1)a=a.includes(j)?a.filter(x=>x!=j):[...a,j];else a=a[0]===j?[]:[j];R.ans[qi]=a;rq(qi)}
+const ok=(q,a)=>q.t=='sa'?!!(a&&q.a.some(x=>x.toLowerCase()==String(a).trim().toLowerCase())):!!(a&&a.length==q.a.length&&q.a.every(x=>a.includes(x)));
+function grade(t,qs,ans){let c=0,w=0,u=0;qs.forEach(i=>{const a=ans[i];if(!(a&&String(a).trim()&&a.length))u++;else if(ok(t.qs[i],a))c++;else w++});return{c,w,u,score:+(c*t.mark-w*t.neg).toFixed(2)}}
+function finT(auto){const un=R.q.filter(x=>!hasA(x)).length;if(!auto&&!confirm(un?`${un} unanswered. Submit?`:'Submit test?'))return;clearInterval(TM);
+ if(R.prac)return showRes(grade(R.t,R.q,R.ans),1);subm()}
+async function subm(){const t=R.t,msg=x=>{$('#mn').innerHTML='<div class="pg">'+x+'</div>'};
+ msg('<p class="mu" style="text-align:center;margin-top:40px">জমা হচ্ছে… অনুগ্রহ করে অপেক্ষা করুন</p>');let r;
+ try{r=await api('sub',{id:t.id,rid:R.rid,name:R.nm,info:R.inf,dev:DEV,ans:R.ans})}catch(e){return msg(ttl('জমা হয়নি')+'<p style="text-align:center">ইন্টারনেট সংযোগ ঠিক করে আবার চেষ্টা করুন। আপনার উত্তর এখানে সংরক্ষিত আছে।</p><div class="ac"><button class="bt" onclick="subm()">আবার জমা দিন</button></div>')}
+ if(r.err)return msg(ttl('জমা হয়নি')+`<p class="er">${E(r.err)}</p>`);
+ if(r.key)R.q.forEach(qi=>{const k=r.key[qi];if(k){t.qs[qi].a=k.a;t.qs[qi].e=k.e}});
+ showRes(r.g,!!r.key)}
+function showRes(g,show){const t=R.t;
+ $('#mn').innerHTML='<div class="pg">'+ttl(show?'Result':'Submitted')+(show?`<div class="sc2">${g.score}<small> / ${+(R.q.length*t.mark).toFixed(2)}</small></div><div class="st"><div><b class="ok">${g.c}</b>Correct</div><div><b class="er" style="margin:0">${g.w}</b>Wrong</div><div><b>${g.u}</b>Skipped</div></div><div class="ac"><button class="bt" onclick="take('${t.id}',${!!R.prac})">${R.prac?'Practice again':'Done'}</button> ${R.prac?`<a class="ob" href="#/t/${t.id}">← Admin</a>`:''}</div><h3 style="margin:10px 0">Review</h3>`+R.q.map((qi,k)=>rv(t,qi,R.ans[qi],k)).join(''):`<p style="text-align:center">Thank you! Your answers have been submitted.</p><div class="ac"><button class="bt" onclick="take('${t.id}',false)">Done</button></div>`)+'</div>';scrollTo(0,0)}
+/* ===== Question Bank (Google Drive via Apps Script; 1000 প্রশ্ন/ফাইল) ===== */
+let BQ={sid:'',s:'',p:0};
+const cl=()=>{const o=$('.ov');if(o)o.remove()};
+async function bSubs(){const a=BANK.map(x=>({...x}));a.forEach(x=>{x.tot=x.n+a.filter(y=>y.par==x.id).reduce((m,y)=>m+y.n,0)});a.forEach(x=>{const p=x.par&&a.find(y=>y.id==x.par);x.lb=p?p.name+' › '+x.name:x.name});return a.sort((x,y)=>x.name.localeCompare(y.name))}
+async function bNew(name,par,cat){const id=uid();await api('bNew',{id,name,par:par||'',cat:cat||''});BANK.push({id,name,par:par||'',cat:cat||'',n:0});return id}
+async function bAdd(sid,arr){let n=0;if(arr.length>300)toast('সংরক্ষণ হচ্ছে… একটু অপেক্ষা করুন');
+ for(let i=0;i<arr.length;i+=1500){const r=await api('bAdd',{sid,arr:arr.slice(i,i+1500)});if(r.err){toast(r.err);break}n=Math.min(arr.length,i+1500);const x=BANK.find(y=>y.id==sid);if(x)x.n=r.n}return n}
+const bPage=(sid,off,lim,term)=>api('bPage',{sid,off,lim,term});
+async function bDel(id,sid,k){await api('bDel',{sid,id,k});const x=BANK.find(y=>y.id==sid);if(x)x.n=Math.max(0,x.n-1)}
+async function bDelS(ids){await api('bDelS',{ids});BANK=BANK.filter(x=>!ids.includes(x.id))}
+async function bGet(sids,n,rnd){return(await api('bGet',{sids,n,rnd:rnd?1:0})).out}
+const bn=()=>`সর্বোচ্চ ${LIM} টি প্রশ্ন; আর ${room(CT)} টি যোগ করা যাবে`;
+async function pBank(sid){const h=location.hash,bs=x=>{if(location.hash==h)$('#mn').innerHTML='<div class="pg">'+x+'</div>'};
+ inst('Question Bank',ttl('Question Bank')+'<p class="mu" style="text-align:center">Loading…</p>');
+ const row=(x,pg)=>`<div class="li"><a href="#/qbank/${x.id}" style="flex:1;color:inherit;text-decoration:none"><b>${E(x.name)}</b><br><small class="mu">${x.tot} টি প্রশ্ন${x.ch?` · ${x.ch} টি অধ্যায়`:''}${!x.par&&x.cat?' · 🗂️ '+E(x.cat):''}</small></a><button class="ob" onclick="bRn('${x.id}','${pg}')">✏️</button><button class="ob r" onclick="bDS('${x.id}','${pg}')">🗑️</button></div>`;
+ try{const all=await bSubs();all.forEach(x=>x.ch=all.filter(y=>y.par==x.id).length);
+ if(!sid)return bs(ttl('Question Bank')+'<p class="mu" style="margin-bottom:12px">বিষয় ভিত্তিক প্রশ্ন সংরক্ষণ করুন। বিষয় তৈরির পর চাইলে অধ্যায় তৈরি করা যায়; অধ্যায় না করলে প্রশ্নগুলো বিষয়ের মূল অংশে থাকে।</p>'+
+  (all.filter(x=>!x.par).map(x=>row(x,'')).join('')||'<p class="mu" style="text-align:center">কোনো বিষয় নেই। নিচে যোগ করুন।</p>')+
+  `<div class="fm"><input id="bsn" placeholder="নতুন বিষয়ের নাম"><select id="bsc" style="margin:8px 0"><option value="">🗂️ ক্যাটাগরি: অশ্রেণিবদ্ধ</option>${DB.cats.map(c=>`<option>${E(c)}</option>`).join('')}</select><button class="bt" onclick="bAddS()">Add Subject</button></div>`);
+ const sb=all.find(x=>x.id==sid);if(!sb)return go('#/qbank');
+ const kids=all.filter(y=>y.par==sid),par=sb.par&&all.find(y=>y.id==sb.par);
+ if(BQ.sid!=sid)BQ={sid,s:'',p:0};
+ const off=BQ.p*50,{out,more}=await bPage(sid,off,50,BQ.s.toLowerCase());
+ bs(ttl(E(sb.name))+`<div class="st"><div><b>${sb.tot}</b>Questions</div>${kids.length?`<div><b>${kids.length}</b>অধ্যায়</div>`:''}</div><div class="ac"><a class="ob" href="#/qbank${par?'/'+par.id:''}">← ${par?E(par.name):'বিষয়সমূহ'}</a>${sb.par?'':`<button class="ob" onclick="bCh('${sid}')">➕ অধ্যায় তৈরি করুন</button><button class="ob" onclick="bCat('${sid}')">🗂️ ক্যাটাগরি${sb.cat?': '+E(sb.cat):''}</button>`}<button class="ob" onclick="bTxt('${sid}')">📝 Text</button><button class="ob" onclick="bCsv('${sid}')">📄 CSV</button><button class="ob" onclick="bOne('${sid}')">➕ একটি প্রশ্ন</button><button class="ob g" onclick="bTest('${sid}')">📤 টেস্টে যোগ করুন</button></div>`+
+  (kids.length?`<div class="sc"><span>📚 অধ্যায়সমূহ</span><span>${kids.length}</span></div>`+kids.map(c=>row(c,sid)).join('')+`<div class="sc"><span>📂 মূল প্রশ্ন (অধ্যায়বিহীন)</span><span>${sb.n}</span></div>`:'')+
+  `<input id="bsq" placeholder="🔎 খুঁজে Enter চাপুন" value="${E(BQ.s)}" style="margin-bottom:14px" onkeydown="if(event.key=='Enter'){BQ.s=this.value;BQ.p=0;pBank('${sid}')}">`+
+  (out.map((x,i)=>`<div class="qr"><div><b>${off+i+1}.</b> ${RT(x.q)}${x.o.map((o,j)=>`<p>${j+1}. ${RT(o)}</p>`).join('')}<p class="ra">Right Answer : ${x.a.map(y=>y+1).join(', ')}</p></div><div class="qa"><button onclick="bDQ('${sid}','${x.id}',${x.k})">🗑️</button></div></div>`).join('')||'<p class="mu" style="text-align:center">কোনো প্রশ্ন নেই।</p>')+
+  `<div class="row"><button class="ob" ${BQ.p?'':'disabled'} onclick="BQ.p--;pBank('${sid}')">← Prev</button><span class="mu">পৃষ্ঠা ${BQ.p+1}</span><button class="ob" ${more?'':'disabled'} onclick="BQ.p++;pBank('${sid}')">Next →</button></div>`)
+ }catch(e){bs('<p class="er">Question Bank খোলা যায়নি (সার্ভার সমস্যা)।</p>')}}
+async function bAddS(){const n=$('#bsn').value.trim();if(!n)return toast('বিষয়ের নাম লিখুন');const id=await bNew(n,'',$('#bsc').value);await pBank();sheet('✅ বিষয় তৈরি হয়েছে — অধ্যায় তৈরি করবেন?',[['📚 অধ্যায় তৈরি করুন',()=>bCh(id)],['না, মূল হিসেবে থাকুক',()=>go('#/qbank/'+id)]])}
+async function bCh(par){const n=(prompt('অধ্যায়ের নাম')||'').trim();if(!n)return location.hash=='#/qbank/'+par?pBank(par):go('#/qbank/'+par);await bNew(n,par);toast('অধ্যায় তৈরি হয়েছে ✔');
+ if(confirm('আরও অধ্যায় তৈরি করবেন?'))return bCh(par);location.hash=='#/qbank/'+par?pBank(par):go('#/qbank/'+par)}
+async function bRn(id,pg){const v=(prompt('নতুন নাম')||'').trim();if(!v)return;await api('bRen',{id,name:v});const x=BANK.find(y=>y.id==id);if(x)x.name=v;pBank(pg)}
+async function bDS(id,pg){const all=await bSubs(),k=all.filter(x=>x.par==id).map(x=>x.id);if(!confirm(k.length?'এই বিষয়, এর সব অধ্যায় ও সব প্রশ্ন মুছবেন?':'এর সব প্রশ্নসহ মুছবেন?'))return;await bDelS([id,...k]);pBank(pg)}
+async function bDQ(sid,id,k){if(!confirm('মুছবেন?'))return;await bDel(id,sid,k);pBank(sid)}
+function bTxt(sid){sheet('📝 প্রশ্ন যোগ (Text)',`<p class="mu">এক বা একাধিক প্রশ্ন পেস্ট করুন; দুই প্রশ্নের মাঝে ফাঁকা লাইন।</p><pre>${E(TQS)}</pre><button class="ob" onclick="$('#tq').value=TQS;tqp()">⤵ নমুনা বসান</button><textarea id="tq" rows="10" oninput="tqp()" placeholder="এখানে প্রশ্ন পেস্ট করুন" style="margin-top:8px"></textarea><p id="tqi" class="mu" style="margin:8px 0"></p><button class="bt" style="width:100%;text-align:center" onclick="bTxa('${sid}')">➕ Add to Bank</button>`)}
+async function bTxa(sid){const g=parseQ($('#tq').value.trim()).filter(x=>!x.bad);if(!g.length)return toast('কোনো সঠিক প্রশ্ন পাওয়া যায়নি');const n=await bAdd(sid,g);cl();toast(n+' টি যোগ হয়েছে ✔');pBank(sid)}
+function bOne(sid){sheet('➕ নতুন প্রশ্ন',`<textarea id="b1q" rows="3" placeholder="প্রশ্ন"></textarea>${[0,1,2,3,4].map(j=>`<input id="b1o${j}" placeholder="Option ${j+1}" style="margin-top:8px">`).join('')}<input id="b1a" placeholder="সঠিক উত্তরের নম্বর (যেমন 2 অথবা 1,3)" style="margin-top:8px"><textarea id="b1e" rows="2" placeholder="ব্যাখ্যা (ঐচ্ছিক)" style="margin:8px 0"></textarea><button class="bt" style="width:100%;text-align:center" onclick="bOne2('${sid}')">Save</button>`)}
+async function bOne2(sid){const q=$('#b1q').value.trim(),o=[],map=[];[0,1,2,3,4].forEach(j=>{const v=$('#b1o'+j).value.trim();if(v){map[j]=o.length;o.push(v)}});
+ const a=bn2en($('#b1a').value).split(/[,\s]+/).map(x=>map[+x-1]).filter(x=>x!==undefined);if(!q||o.length<2||!a.length)return toast('প্রশ্ন, ২+ অপশন ও সঠিক উত্তর দিন');
+ await bAdd(sid,[{q,o,a,e:$('#b1e').value.trim()}]);cl();toast('Saved ✔');pBank(sid)}
+function csvP(t){const r=[];let row=[],c='',q=0;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=0}else c+=ch}else if(ch=='"')q=1;else if(ch==','){row.push(c);c=''}else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&t[i+1]=='\n')i++;row.push(c);c='';r.push(row);row=[]}else c+=ch}if(c||row.length){row.push(c);r.push(row)}return r.filter(x=>x.some(y=>y.trim()))}
+function bCsv(sid){const f=D.createElement('input');f.type='file';f.accept='.csv,.txt';f.onchange=()=>{const r=new FileReader();r.onload=async()=>{const rows=csvP(r.result.replace(/^\ufeff/,''));if(rows[0]&&/^(question|প্রশ্ন)/i.test(rows[0][0].trim()))rows.shift();
+ const g=[];rows.forEach(x=>{const o=[],map=[];[1,2,3,4,5].forEach(j=>{const v=(x[j]||'').trim();if(v){map[j-1]=o.length;o.push(v)}});const a=bn2en(x[6]||'').split(/[,\s|]+/).map(y=>map[+y-1]).filter(y=>y!==undefined);
+  if((x[0]||'').trim()&&o.length>1&&a.length)g.push({q:x[0].trim(),o,a,e:(x[7]||'').trim()})});
+ if(!g.length)return toast('কোনো সঠিক প্রশ্ন পাওয়া যায়নি');const n=await bAdd(sid,g);toast(n+' টি যোগ ✔'+(rows.length>n?' ('+(rows.length-n)+' টি বাদ)':''));pBank(sid)};r.readAsText(f.files[0])};f.click()}
+function bTest(sid){if(!DB.tests.length)return toast('কোনো টেস্ট নেই');sheet('কোন টেস্টে যোগ করবেন?',DB.tests.map(t=>[E(t.name)+` (${cnt(t)}/${LIM})`,()=>bPick(sid,t.id)]))}
+async function bPick(sid,tid){const t=tst(tid);await ensureQs(t);const r=room(t);if(r<=0)return toast(`এই টেস্টে ইতিমধ্যে ${LIM} টি প্রশ্ন আছে`);
+ sheet('📤 টেস্টে যোগ করুন',`<p>টেস্ট: <b>${E(t.name)}</b><br><span class="mu">আর ${r} টি যোগ করা যাবে</span></p>${secSel('bqs','x',t)}<label class="f">কতটি প্রশ্ন?</label><input id="bqn" type="number" min="1" max="${r}" value="${Math.min(20,r)}"><label class="f">কোনগুলো?</label><select id="bqm"><option value="r">র‍্যান্ডম</option><option value="f">ক্রমানুসারে (প্রথম থেকে)</option></select><div class="ac"><button class="bt" onclick="bGo('${sid}','${tid}')">Add</button></div>`)}
+async function bGo(sid,tid){const t=tst(tid),sc=secVal('bqs');if(sc===null)return;let n=+$('#bqn').value||0;if(n<1)return toast('সংখ্যা দিন');n=Math.min(n,room(t));
+ const all=await bSubs(),g=await bGet([sid,...all.filter(x=>x.par==sid).map(x=>x.id)],n,$('#bqm').value=='r');g.forEach(x=>t.qs.push({t:'mc',q:x.q,o:x.o,a:x.a,e:x.e,img:x.img,sid:sc}));norm(t);sv();cl();toast(g.length+' টি প্রশ্ন যোগ হয়েছে ✔');if(CT&&CT.id==tid&&location.hash.startsWith('#/t/'))go('#/t/'+tid+'/view');else pBank(sid)}
+async function toBank(){let sb=[];try{sb=await bSubs()}catch(e){return toast('Question Bank পাওয়া যাচ্ছে না')}
+ sheet('কোন বিষয়ে সংরক্ষণ করবেন?',[...sb.map(b=>[E(b.lb)+` (${b.n})`,()=>bSave(b.id)]),['➕ নতুন বিষয়',async()=>{const n=(prompt('বিষয়ের নাম')||'').trim();if(n)bSave(await bNew(n))}]])}
+async function bSave(sid){const g=CT.qs.filter(x=>x.t=='mc');if(!g.length)return toast('কোনো MCQ নেই');const n=await bAdd(sid,g);toast(n+' টি প্রশ্ন ব্যাংকে সংরক্ষিত ✔')}
+
+route();
+</script>
+</body>
+</html>
