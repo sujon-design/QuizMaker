@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" spellcheck="false">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -81,6 +81,17 @@ pre{background:var(--cd);padding:10px;border-radius:8px;white-space:pre-wrap;fon
 @media print{#hd,#sd,#bk,.bt,.ob,.qa,.tabs{display:none!important}#hd,#mn{margin-left:0!important}body{background:#fff;color:#000}}
 #svs{position:fixed;right:12px;bottom:12px;z-index:80;font-size:.85rem;background:var(--cd);border:1px solid var(--bd);padding:3px 12px;border-radius:99px;display:none;color:var(--tx)}
 </style>
+<script>
+/* Disable red spell-check underline everywhere */
+(function(){
+ function nc(el){if(el.setAttribute){el.setAttribute('spellcheck','false');el.setAttribute('autocorrect','off');el.setAttribute('autocapitalize','off');el.setAttribute('autocomplete',el.getAttribute('autocomplete')||'off')}}
+ function scan(r){if(r.nodeType!==1)return;if(r.matches&&r.matches('input,textarea,[contenteditable]'))nc(r);r.querySelectorAll&&r.querySelectorAll('input,textarea,[contenteditable]').forEach(nc)}
+ document.documentElement.setAttribute('spellcheck','false');
+ new MutationObserver(m=>m.forEach(x=>x.addedNodes.forEach(scan))).observe(document.documentElement,{childList:true,subtree:true});
+ document.addEventListener('focusin',e=>{if(e.target&&e.target.matches&&e.target.matches('input,textarea'))nc(e.target)},true);
+ document.addEventListener('DOMContentLoaded',()=>scan(document.body));
+})();
+</script>
 </head>
 <body>
 <aside id="sd"><div id="lg" class="lg"></div><nav id="nv" onclick="mo(0)"></nav></aside><div id="bk" onclick="mo(0)"></div>
