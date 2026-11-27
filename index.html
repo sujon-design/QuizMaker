@@ -241,7 +241,7 @@ const inst=(title,body)=>{TB='';shell(title,IM,null,body)};
 function route(){clearInterval(TM);D.body.classList.remove('tk');D.body.dataset.th='';
  const p=(location.hash.slice(2)||'').split('/'),v=p[0];
  if(v==='take'&&p[2]!=='p')return take(p[1],false);
- if(v==='sp')return spPage(p[1]);
+ if(v==='sp')return spPage(p[1],p[2]);
  if(v==='logout'){sessionStorage.removeItem('qm_tk');DB=null;STUC=null;location.hash='#/';return}
  if(!authed())return loginPg();
  if(!DB)return init();
@@ -254,7 +254,7 @@ const authed=()=>!!sessionStorage.getItem('qm_tk');
 function loginPg(){D.body.classList.add('tk');D.body.dataset.th='';$('#hd').className='t';$('#ht').textContent='Admin Login';mo(0);const k="if(event.key=='Enter')doLogin()";
  $('#mn').innerHTML=`<div class="pg lgn"><div class="lgc"><div class="lgi">🔐</div><div class="ttl">অ্যাডমিন লগইন</div><p class="lgs">চালিয়ে যেতে আপনার তথ্য দিন</p><div class="fm"><input id="lu" placeholder="Username" autocomplete="username" onkeydown="${k}"><input id="lp" type="password" placeholder="Password" autocomplete="current-password" onkeydown="${k}"><button class="bt" id="lb" onclick="doLogin()">Login</button></div><p id="le" class="er"></p></div></div>`;scrollTo(0,0)}
 async function doLogin(){const u=$('#lu').value.trim(),pw=$('#lp').value,e=$('#le'),b=$('#lb');if(!u||!pw)return e.textContent='ইউজারনেম ও পাসওয়ার্ড দিন';b.disabled=1;b.textContent='…';e.textContent='';
- try{const r=await api('login',{u,p:pw});if(r.err){e.textContent=r.err;b.disabled=0;b.textContent='Login';return}sessionStorage.setItem('qm_tk',r.tk);DB=null;if(location.hash.startsWith('#/take')||!location.hash)location.hash='#/';route()}catch(x){b.disabled=0;b.textContent='Login';e.textContent='সার্ভারের সাথে সংযোগ হয়নি'}}
+ try{const r=await api('login',{u,p:pw});if(r.err){e.textContent=r.err;b.disabled=0;b.textContent='Login';return}sessionStorage.setItem('qm_tk',r.tk);DB=null;history.replaceState(null,'',location.pathname+location.search+'#/');route()}catch(x){b.disabled=0;b.textContent='Login';e.textContent='সার্ভারের সাথে সংযোগ হয়নি'}}
 async function chPw(){const r=await api('chpw',{o:$('#cp0').value,n:$('#cp1').value,u:$('#cu').value.trim()});if(r.err)return toast(r.err);sessionStorage.setItem('qm_tk',r.tk);DB.user=$('#cu').value.trim()||DB.user;toast('পাসওয়ার্ড পরিবর্তিত ✔');pPf()}
 const hs=x=>{const t=(typeof DB!=='undefined'&&DB)?DB.tests.find(y=>y.id==x.tid):0;return t?+((x.c||0)*t.mark-(x.w||0)*t.neg).toFixed(2)+'/'+(+(((x.c||0)+(x.w||0)+(x.u||0))*t.mark).toFixed(2)):x.score+'/'+x.tot};
 const HI=st=>{const h=(st.hist||[]).slice().sort((a,b)=>b.date-a.date);return `<div class="sc"><span>📊 পরীক্ষার ইতিহাস</span><span>${h.length}</span></div>`+(h.length?`<div style="overflow-x:auto"><table class="rt"><tr><th>টেস্ট</th><th>স্কোর</th><th>✔</th><th>✘</th><th>তারিখ</th></tr>${h.map(x=>`<tr><td>${E(x.tn)}</td><td>${hs(x)}</td><td>${x.c}</td><td>${x.w}</td><td>${new Date(x.date).toLocaleDateString('bn-BD')}</td></tr>`).join('')}</table></div>`:'<p class="mu" style="text-align:center">এখনো কোনো পরীক্ষা নেই।</p>')+'<br>'};
@@ -295,13 +295,14 @@ function pStu0(id){const st=id&&STUC.find(x=>x.id==id);
  const by={};L.filter(x=>SF=='grp'||SF=='all'||x.tid==SF).forEach(x=>(by[x.tn]=by[x.tn]||[]).push(x));
  const flat=L.slice().sort((a,b)=>b.date-a.date);
  const sel=`<select style="margin:8px 0 14px" onchange="SF=this.value;pStu('${st.id}')"><option value="grp" ${SF=='grp'?'selected':''}>টেস্ট অনুযায়ী ভাগ করে (সব টেস্ট)</option><option value="all" ${SF=='all'?'selected':''}>টেস্ট ছাড়া — সব ভুল একসাথে</option>${Object.keys(tn).map(k=>`<option value="${k}" ${SF==k?'selected':''}>শুধু: ${E(tn[k])}</option>`).join('')}</select>`;
- inst('Student',ttl(E(st.name))+`<p class="mu">${E(st.info||'')} · ভুল: ${(st.items||[]).length} · উত্তর দেয়নি: ${(st.un||[]).length} · সঠিক: ${(st.rt||[]).length}</p><div class="ac"><a class="ob" href="#/students">← সব শিক্ষার্থী</a><button class="ob r" onclick="dstu('${st.id}')">🗑️ সব মুছুন</button></div><div class="qc"><b>🔗 ${E(st.name)} — ভুল প্রশ্ন অনুশীলনের লিংক</b><p class="mu" style="word-break:break-all">${E(spLink(st.id))}</p><button class="ob" onclick="cp(spLink('${st.id}'))">🔗 লিংক কপি</button></div>`+HI(st)+`<div class="ac" style="margin:10px 0">${[['w','❌ ভুল প্রশ্ন',(st.items||[]).length],['u','⚪ উত্তর দেয়নি',(st.un||[]).length],['c','✅ সঠিক উত্তর',(st.rt||[]).length]].map(([k,n,c])=>`<button class="${STAB==k?'bt':'ob'}" onclick="stTab('${k}','${st.id}')">${n} (${c})</button>`).join('')}</div><div class="qc"><b>📝 এই তালিকার প্রশ্ন দিয়ে পরীক্ষা</b><p class="mu">নিচে প্রশ্ন নির্বাচন করুন (কিছু নির্বাচন না করলে নিচের তালিকার সব প্রশ্ন ধরা হবে)। নির্বাচিত: <b>${SEL.size}</b></p><button class="ob" onclick="stAll('${st.id}',1)">☑ সব নির্বাচন</button><button class="ob" onclick="stAll('${st.id}',0)">✖ বাতিল</button><br><button class="ob" onclick="stToTest('${st.id}')">➕ বিদ্যমান টেস্টে যোগ</button><button class="ob" onclick="stNew('${st.id}')">🆕 নতুন টেস্ট তৈরি</button></div>`+sel+
+ inst('Student',ttl(E(st.name))+`<p class="mu">${E(st.info||'')} · ভুল: ${(st.items||[]).length} · উত্তর দেয়নি: ${(st.un||[]).length} · সঠিক: ${(st.rt||[]).length}</p><div class="ac"><a class="ob" href="#/students">← সব শিক্ষার্থী</a><button class="ob r" onclick="dstu('${st.id}')">🗑️ সব মুছুন</button></div><div class="qc"><b>🔗 ${E(st.name)} — ${SPN[STAB]} অনুশীলনের লিংক</b><p class="mu" style="word-break:break-all">${E(spLink(st.id,STAB))}</p><button class="ob" onclick="cp(spLink('${st.id}','${STAB}'))">🔗 লিংক কপি</button></div>`+HI(st)+`<div class="ac" style="margin:10px 0">${[['w','❌ ভুল প্রশ্ন',(st.items||[]).length],['u','⚪ উত্তর দেয়নি',(st.un||[]).length],['c','✅ সঠিক উত্তর',(st.rt||[]).length]].map(([k,n,c])=>`<button class="${STAB==k?'bt':'ob'}" onclick="stTab('${k}','${st.id}')">${n} (${c})</button>`).join('')}</div><div class="qc"><b>📝 এই তালিকার প্রশ্ন দিয়ে পরীক্ষা</b><p class="mu">নিচে প্রশ্ন নির্বাচন করুন (কিছু নির্বাচন না করলে নিচের তালিকার সব প্রশ্ন ধরা হবে)। নির্বাচিত: <b>${SEL.size}</b></p><button class="ob" onclick="stAll('${st.id}',1)">☑ সব নির্বাচন</button><button class="ob" onclick="stAll('${st.id}',0)">✖ বাতিল</button><br><button class="ob" onclick="stToTest('${st.id}')">➕ বিদ্যমান টেস্টে যোগ</button><button class="ob" onclick="stNew('${st.id}')">🆕 নতুন টেস্ট তৈরি</button></div>`+sel+
  (SF=='all'?flat.map((x,k)=>rw(x,k,st.id)).join(''):Object.keys(by).map(n=>`<div class="sc"><span>📂 ${E(n)}</span><span>${by[n].length}</span></div>`+by[n].map((x,k)=>rw(x,k,st.id)).join('')).join('')||'<p class="mu" style="text-align:center">এই তালিকায় কোনো প্রশ্ন নেই।</p>'))}
 let SEL=new Set();
 function rw(e,k,sid){const q=e.q,a=e.g;const b=q.t=='mc'?q.o.map((o,j)=>`<div class="op ${q.a.includes(j)?'ok':a&&a.includes&&a.includes(j)?'bad':''}"><span>${j+1}</span>${RT(o)}</div>`).join(''):`<p>Answer: <b>${E((a&&a.length)?a:'—')}</b></p><p class="ok">Correct: ${E(q.a.join(' / '))}</p>`;
  return `<div class="qc"><div class="qt">${k+1}. ${RT(q.q)}</div>${q.img?`<img src="${E(q.img)}">`:''}${b}${q.e?`<div class="ex">💡 ${RT(q.e)}</div>`:''}<small class="mu">${new Date(e.date).toLocaleDateString()} · ${STAB=='w'?'ভুল করেছে':STAB=='u'?'উত্তর দেয়নি':'সঠিক দিয়েছে'} ${e.n||1} বার</small> <button class="ob r" onclick="dwi('${sid}','${e.id}')">🗑️</button><label style="float:right;display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" ${SEL.has(e.id)?'checked':''} onchange="stSel('${e.id}',this.checked)"> নির্বাচন</label></div>`}
 
-const spLink=id=>location.href.split('#')[0]+'#/sp/'+id;
+const spLink=(id,k)=>location.href.split('#')[0]+'#/sp/'+id+(k=='u'||k=='c'?'/'+k:'');
+const SPN={w:'ভুল প্রশ্ন',u:'উত্তর না দেওয়া প্রশ্ন',c:'সঠিক উত্তর দেওয়া প্রশ্ন'};
 function stShown(st){return sl(st).filter(x=>SF=='grp'||SF=='all'||x.tid==SF)}
 function stSel(id,on){on?SEL.add(id):SEL.delete(id);const st=STUC.find(x=>sl(x).some(y=>y.id==id));if(st)pStu0(st.id)}
 function stAll(sid,on){const st=STUC.find(x=>x.id==sid);stShown(st).forEach(x=>on?SEL.add(x.id):SEL.delete(x.id));pStu0(sid)}
@@ -315,11 +316,11 @@ function stNew(sid){const st=STUC.find(x=>x.id==sid),l=stPick(sid);if(!l.length)
  const t=mk(n,Math.floor(1e5+Math.random()*9e5)+'',DB.cats[1]||DB.cats[0],l.map(x=>({...x})));norm(t);DB.tests.push(t);sv();toast('নতুন টেস্ট তৈরি হয়েছে ✔');go('#/t/'+t.id+'/view')}
 /* ===== শিক্ষার্থীর নিজস্ব ভুল-প্রশ্ন অনুশীলন (লিংক: #/sp/ID) ===== */
 let SP=null;
-async function spPage(id){D.body.classList.add('tk');D.body.dataset.th='';$('#hd').className='t';$('#ht').textContent='ভুল প্রশ্ন অনুশীলন';mo(0);
+async function spPage(id,kd){kd=kd=='u'||kd=='c'?kd:'w';D.body.classList.add('tk');D.body.dataset.th='';$('#hd').className='t';$('#ht').textContent=SPN[kd]+' অনুশীলন';mo(0);
  const set=h=>{$('#mn').innerHTML='<div class="pg">'+h+'</div>';scrollTo(0,0)};set('<p class="mu" style="text-align:center;margin-top:40px">লোড হচ্ছে…</p>');
- let r;try{r=await api('sp',{id})}catch(e){if(e&&e.auth)return;return set(ttl('সংযোগ হয়নি')+'<div class="ac"><button class="bt" onclick="route()">আবার চেষ্টা করুন</button></div>')}
+ let r;try{r=await api('sp',{id,kd})}catch(e){if(e&&e.auth)return;return set(ttl('সংযোগ হয়নি')+'<div class="ac"><button class="bt" onclick="route()">আবার চেষ্টা করুন</button></div>')}
  if(!r||!r.items)return set(ttl('লিংক সঠিক নয়'));
- SP={name:r.name,all:r.items,f:'all',q:[],i:0,c:0,done:0,sel:[],chk:0};spStart()}
+ SP={kd,name:r.name,all:r.items,f:'all',q:[],i:0,c:0,done:0,sel:[],chk:0};spStart()}
 function spStart(){const S=SP;let l=S.all.filter(x=>S.f=='all'||x.tid==S.f);l=l.slice().sort(()=>Math.random()-.5);S.q=l;S.i=0;S.c=0;S.done=0;S.sel=[];S.chk=0;spDraw()}
 function spF(v){SP.f=v;spStart()}
 function spPick(j){const S=SP;if(S.chk)return;const q=S.q[S.i];if(q.a.length>1){const k=S.sel.indexOf(j);k>=0?S.sel.splice(k,1):S.sel.push(j)}else S.sel=[j];spDraw()}
@@ -328,14 +329,14 @@ function spChk(){const S=SP,q=S.q[S.i];if(S.chk)return;if(q.t=='sa'){S.sel=[($('
 const spOk=(q,a)=>q.t=='sa'?(q.a||[]).some(x=>String(x).toLowerCase()==String(a[0]).trim().toLowerCase()):a.length==q.a.length&&q.a.every(x=>a.includes(x));
 function spNext(){SP.i++;SP.sel=[];SP.chk=0;spDraw()}
 function spDraw(){const S=SP,tn={};S.all.forEach(x=>tn[x.tid]=x.tn);
- const sel=`<select style="margin:8px 0 14px" onchange="spF(this.value)"><option value="all" ${S.f=='all'?'selected':''}>সব টেস্টের ভুল প্রশ্ন (${S.all.length})</option>${Object.keys(tn).map(k=>`<option value="${k}" ${S.f==k?'selected':''}>${E(tn[k])}</option>`).join('')}</select>`;
- let h=ttl(E(S.name))+'<p class="mu" style="text-align:center">আপনার অতীতের ভুল প্রশ্নগুলো অনুশীলন করুন</p>'+sel;
- if(!S.q.length)h+='<p class="mu" style="text-align:center">কোনো ভুল প্রশ্ন নেই 🎉</p>';
+ const sel=`<select style="margin:8px 0 14px" onchange="spF(this.value)"><option value="all" ${S.f=='all'?'selected':''}>সব টেস্টের ${SPN[S.kd]} (${S.all.length})</option>${Object.keys(tn).map(k=>`<option value="${k}" ${S.f==k?'selected':''}>${E(tn[k])}</option>`).join('')}</select>`;
+ let h=ttl(E(S.name))+'<p class="mu" style="text-align:center">আপনার অতীতের ${SPN[S.kd]}গুলো অনুশীলন করুন</p>'+sel;
+ if(!S.q.length)h+='<p class="mu" style="text-align:center">এই তালিকায় কোনো প্রশ্ন নেই'+(S.kd=='w'?' 🎉':'')+'</p>';
  else if(S.i>=S.q.length)h+=`<div class="sc2">${S.c}<small> / ${S.q.length}</small></div><p style="text-align:center">সঠিক উত্তর</p><div class="ac"><button class="bt" onclick="spStart()">আবার অনুশীলন করুন</button></div>`;
  else{const q=S.q[S.i];let b;
   if(q.t=='sa')b=S.chk?`<p>আপনার উত্তর: <b>${E(S.sel[0])}</b></p><p class="ok">সঠিক: ${E((q.a||[]).join(' / '))}</p>`:'<input id="spa" placeholder="উত্তর লিখুন">';
   else b=(q.o||[]).map((o,j)=>`<div class="op ${S.chk?(q.a.includes(j)?'ok':S.sel.includes(j)?'bad':''):(S.sel.includes(j)?'sel':'')}" onclick="spPick(${j})"><span>${j+1}</span>${RT(o)}</div>`).join('');
-  h+=`<div class="qc"><small class="mu">${S.i+1} / ${S.q.length} · ভুল করেছেন ${q.n||1} বার</small><div class="qt">${RT(q.q)}</div>${q.img?`<img src="${E(q.img)}">`:''}${b}${S.chk&&q.e?`<div class="ex">💡 ${RT(q.e)}</div>`:''}</div><div class="ac">${S.chk?`<button class="bt" onclick="spNext()">${S.i+1>=S.q.length?'ফলাফল দেখুন':'পরের প্রশ্ন ▶'}</button>`:'<button class="bt" onclick="spChk()">উত্তর দেখুন</button>'}</div>`}
+  h+=`<div class="qc"><small class="mu">${S.i+1} / ${S.q.length} · ${S.kd=='w'?'ভুল করেছেন':S.kd=='u'?'উত্তর দেননি':'সঠিক দিয়েছেন'} ${q.n||1} বার</small><div class="qt">${RT(q.q)}</div>${q.img?`<img src="${E(q.img)}">`:''}${b}${S.chk&&q.e?`<div class="ex">💡 ${RT(q.e)}</div>`:''}</div><div class="ac">${S.chk?`<button class="bt" onclick="spNext()">${S.i+1>=S.q.length?'ফলাফল দেখুন':'পরের প্রশ্ন ▶'}</button>`:'<button class="bt" onclick="spChk()">উত্তর দেখুন</button>'}</div>`}
  $('#mn').innerHTML='<div class="pg">'+h+'</div>'}
 async function dwi(sid,id){await api('stuItemDel',{sid,id,kd:SK[STAB]});const st=STUC.find(x=>x.id==sid);if(st)st[SK[STAB]]=(st[SK[STAB]]||[]).filter(x=>x.id!=id);pStu0(sid)}
 async function dstu(id){if(confirm('এই শিক্ষার্থীর সব তথ্য (ভুল, উত্তর না দেওয়া ও সঠিক প্রশ্ন) মুছবেন?')){await api('stuDel',{id});STUC=null;go('#/students')}}
