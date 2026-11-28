@@ -129,6 +129,8 @@ pre{background:var(--cd);padding:10px;border-radius:10px;border:1px solid var(--
 .tc button:active{background:rgba(255,255,255,.4)}
 .lgc .bt{border-radius:999px;height:54px}.lgc .bt:after{display:none}
 ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:rgba(100,115,154,.35);border-radius:8px}
+.qc.rsb{display:flex;gap:8px;flex-wrap:wrap}.sh .rsb .ob{flex:1 1 0;min-width:0;width:auto;margin:0;padding:10px 2px;font-size:.9rem;text-align:center;white-space:nowrap}
+.pdfv{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;background:#4b5563}.pdfb{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;background:var(--bg);color:var(--tx)}.pdfb .ob{margin:0;padding:8px 12px;white-space:nowrap}.pdfs{flex:1;overflow:auto;padding:12px}.pdfs img{display:block;width:100%;max-width:794px;height:auto;margin:0 auto 12px}
 @media print{#hd,#sd,#bk,.bt,.ob,.qa,.tabs{display:none!important}#hd,#mn{margin-left:0!important}body{background:#fff;color:#000}}
 #svs{position:fixed;right:12px;bottom:12px;z-index:80;font-size:.85rem;background:var(--cd);border:1px solid var(--bd);padding:4px 12px;border-radius:99px;display:none;color:var(--tx);box-shadow:var(--sh)}
 
@@ -183,7 +185,7 @@ const RT=s=>E(s).replace(/&lt;(\/?)(b|i|u|sup|sub)&gt;/g,'<$1$2>')
  .replace(/\n/g,'<br>');
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
 const bn2en=s=>String(s).replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d));
-const mk=(name,pw,cat,qs=[])=>({id:uid(),name,pw,cat,desc:'',time:10,mark:1,neg:0,showRes:1,tries:0,shuffle:0,display:'one',opt:'num',th:'',who:'any',info:0,status:'published',qs,nq:0});
+const mk=(name,pw,cat,qs=[])=>({id:uid(),name,pw,cat,desc:'',time:10,mark:1,neg:0,showRes:1,tries:0,shuffle:0,display:'one',opt:'num',th:'',who:'any',info:0,status:'closed',qs,nq:0});
 const S=(q,o,a,e)=>({t:'mc',q,o,a:[a],e:e||''});
 const API='https://script.google.com/macros/s/AKfycbwEUndKwUS2Gb-BYYt-G2wD8ayYj85Nw5zAaGHALCr8BE_ReLuSwq8Yw8iThgDdBxPX/exec';
 let DB=null,BANK=[],TT=null,STUC=null,ST={m:''},SQ={},svT=0,busy=0,pend=0;
@@ -265,7 +267,7 @@ function home(){
  const l=DB.tests.filter(t=>DB.cf==='All'||t.cat===DB.cf);
  inst('Institution Panel',`<div class="ac"><a class="bt" href="#/create">Create Test</a></div>
  <select style="margin-bottom:22px" onchange="DB.cf=this.value;sv();home()"><option ${DB.cf==='All'?'selected':''}>All</option>${DB.cats.map(c=>`<option ${c===DB.cf?'selected':''}>${E(c)}</option>`).join('')}</select>
- ${l.map((t,i)=>`<div class="tc"><b>${i+1}</b><a href="#/t/${t.id}">${E(t.name)}${t.status=='published'?'':' 🔒'}</a><button onclick="tmenu('${t.id}')">⋮</button></div>`).join('')||'<p class="mu" style="text-align:center">No tests here. Tap “Create Test”.</p>'}`)}
+ ${l.map((t,i)=>`<div class="tc"><b>${i+1}</b><a href="#/t/${t.id}">${E(t.name)}${t.status=='published'?'':t.status=='done'?' ✓':' 🔒'}</a><button onclick="tmenu('${t.id}')">⋮</button></div>`).join('')||'<p class="mu" style="text-align:center">No tests here. Tap “Create Test”.</p>'}`)}
 function tmenu(id){const t=tst(id),lk=location.href.split('#')[0]+'#/take/'+id;
  sheet(E(t.name),[['⚙️ Open Admin Panel',()=>go('#/t/'+id)],['▶ Take Test (Exam)',()=>go('#/take/'+id)],['✏️ Preview (Practice)',()=>go('#/take/'+id+'/p')],['🔗 Copy Test Link',()=>cp(lnk(id))],
  ['🗂️ Move to Category',()=>sheet('Move to',DB.cats.map(c=>[E(c),()=>{t.cat=c;sv();home()}]))],
@@ -347,7 +349,7 @@ async function adm(t,sec,arg){CT=t;TB='#/t/'+t.id;const b=TB,M=[['🏠','Dashboa
  const h0=location.hash,x=await ({dash:pDash,add:pAdd,view:pView,set:pSet,res:pRes,imp:pImp}[sec]||pDash)(t,arg);if(location.hash!==h0)return;shell('MCQ Quiz Maker',M,t,x[0]);if(x[1])x[1]()}
 function pDash(t){setTimeout(()=>tlf(t.id),0);const lk=location.href.split('#')[0]+'#/take/'+t.id,nq=t.qs.filter(q=>q.t!='sec').length;
  return [ttl('Dashboard')+`<p>This is the admin panel of this test</p><p><b>Test Name :</b> ${E(t.name)}</p><p><b>Test Password :</b> ${E(t.pw)}</p>
- <div class="st"><div><b>${nq}</b>Questions</div><div><b>${t.status=='published'?'🟢':'🔴'}</b>${t.status}</div></div>
+ <div class="st"><div><b>${nq}</b>Questions</div><div><b>${t.status=='published'?'🟢':t.status=='done'?'✅':'🔴'}</b>${t.status}</div></div>
  <p id="tlk" style="word-break:break-all;color:#1a0dab">লিংক তৈরি হচ্ছে…</p><div class="ac"><button class="bt" onclick="tlc('${t.id}')">Click here to copy test link</button><br><br><a class="ob" href="#/take/${t.id}/p">▶ Preview (Practice)</a><a class="ob" href="#/take/${t.id}">▶ Take as Exam</a></div>
  <p>1. Add questions.<br>2. View questions. If any edit require.<br>3. Adjust Settings & set status to Published.<br>4. Share test link with candidates.<br>5. View test results.</p>
  <p style="color:#d6006f;margin-top:12px">সব ডাটা Google Drive-এ সংরক্ষিত হয় (পরিবর্তনের কয়েক সেকেন্ডের মধ্যে অটো-সেভ)।</p>`]}
@@ -471,7 +473,7 @@ const YN=[[1,'Yes'],[0,'No']];
 function pSet(t){return [ttl('Settings')+F('Test Name','s_name',t.name)+`<label class="f">Test Description</label><textarea id="s_desc" rows="4">${E(t.desc)}</textarea>`+F('Admin Password','s_pw',t.pw)+F('Test Time (Minutes) — 0 = no timer','s_time',t.time,'number')+F('Mark for each correct answer','s_mark',t.mark,'number')+F('Negative Mark for each wrong answer','s_neg',t.neg,'number')
  +SL('Students can view their results after the test ?','s_sr',YN,t.showRes)+SL('ভুল প্রশ্নের গণনা (শিক্ষার্থীর উত্তরপত্রে)','s_wm',[['t','শুধু এই টেস্টে'],['a','সব টেস্ট মিলিয়ে']],t.wm||'t')+SL("'উত্তর দেয়নি' এমন প্রশ্নের গণনা (শিক্ষার্থীর উত্তরপত্রে)",'s_um',[['t','শুধু এই টেস্টে'],['a','সব টেস্ট মিলিয়ে']],t.um||'t')+SL('How many times can students take the test ?','s_tr',[[1,'One Time'],[2,'Two Times'],[3,'Three Times'],[5,'Five Times'],[0,'Unlimited']],t.tries)+SL('Shuffle Questions ?','s_sh',YN.slice().reverse(),t.shuffle)
  +SL('Display Questions','s_dp',[['one','One by one'],['all','All at once']],t.display)+SL('Question Options','s_op',[['num','Numeric'],['alpha','Alphabetic']],t.opt)+SL('Themes','s_th',[['','Default'],['dark','Dark'],['rose','Rose']],t.th)
- +SL('Who can take your test ?','s_wh',[['any','Anyone (Browser Tracking)'],['anon','Anonymous (no name)']],t.who)+SL('Do you need additional info field ?','s_in',YN.slice().reverse(),t.info)+SL('Test Status','s_st',[['published','Published'],['closed','Closed']],t.status)
+ +SL('Who can take your test ?','s_wh',[['any','Anyone (Browser Tracking)'],['anon','Anonymous (no name)']],t.who)+SL('Do you need additional info field ?','s_in',YN.slice().reverse(),t.info)+SL('Test Status','s_st',[['published','Published'],['closed','Closed'],['done','Done']],t.status)
  +`<div class="ac" style="margin-top:22px"><button class="bt" onclick="saveS()">Save</button></div>`]}
 function saveS(){const t=CT,g=i=>$('#'+i).value;Object.assign(t,{name:g('s_name').trim()||t.name,desc:g('s_desc'),pw:g('s_pw'),time:+g('s_time')||0,mark:+g('s_mark')||0,neg:+g('s_neg')||0,showRes:+g('s_sr'),tries:+g('s_tr'),wm:g('s_wm'),um:g('s_um'),shuffle:+g('s_sh'),display:g('s_dp'),opt:g('s_op'),th:g('s_th'),who:g('s_wh'),info:+g('s_in'),status:g('s_st')});sv();toast('Settings saved ✔')}
 async function pRes(t){const r0=await api('getRes',{id:t.id});t.results=(r0.res||[]).map(r=>r.status=='done'?{...r,score:+((r.c||0)*t.mark-(r.w||0)*t.neg).toFixed(2)}:r);const nq=t.qs.filter(q=>q.t!='sec').length,tot=+(nq*t.mark).toFixed(2),rs=[...t.results].reverse();
@@ -483,7 +485,48 @@ function rcsv(){csv(CT.name+'-results',[['Name','Info','Score','Correct','Wrong'
 const fdt=x=>{if(!x)return '–';const d=new Date(x),z=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())+' '+z(d.getHours())+':'+z(d.getMinutes())+':'+z(d.getSeconds())};
 function shR(id){const t=CT,r=t.results.find(x=>x.id==id),nq=t.qs.filter(q=>q.t!='sec').length,tot=+(nq*t.mark).toFixed(2),sc=+((r.c||0)*t.mark-(r.w||0)*t.neg).toFixed(2),pc=tot?(sc/tot*100).toFixed(2):'0.00';
  const rows=[['Test Name',E(t.name)],['Test ID',E(t.id)],['Candidate Name',E(r.name)],['Candidate ID',E(r.dev||r.id)],['Test Start Time',fdt(r.ts)],['Test End Time',fdt(r.date)],['Total Questions',nq],['Right Answered',r.c||0],['Wrong Answered',r.w||0],['Not Attempted',r.u||0],['Mark for each right answer',t.mark],['Negative mark for each wrong answer',t.neg],['Score',sc+' / '+tot],['Percentage',pc+'%']];
- sheet(E(r.name),`<table class="rt" style="width:100%;margin-bottom:14px">${rows.map(x=>`<tr><td><b>${x[0]}</b></td><td>${x[1]}</td></tr>`).join('')}</table>`+(t.qs.map((q,i)=>[q,i]).filter(x=>x[0].t!='sec').map(([q,i],k)=>rv(t,i,r.ans[i],k)).join('')||''))}
+ sheet(E(r.name),`<table class="rt" style="width:100%;margin-bottom:14px">${rows.map(x=>`<tr><td><b>${x[0]}</b></td><td>${x[1]}</td></tr>`).join('')}</table><div class="qc rsb"><button class="ob" onclick="cl()">← Back</button><button class="ob" onclick="dlR('${r.id}',this)">⬇ Download</button><button class="ob r" onclick="delOne('${r.id}',this)">🗑️ Delete</button></div>`+(t.qs.map((q,i)=>[q,i]).filter(x=>x[0].t!='sec').map(([q,i],k)=>rv(t,i,r.ans[i],k)).join('')||''))}
+/* উত্তরপত্র → PDF: আগে প্রিভিউ, তারপর ডাউনলোড (বাইরের কোনো লাইব্রেরি ছাড়া) */
+const PW=794,PH=1123,PM=36,PCSS=`*{box-sizing:border-box;margin:0;padding:0}.pdfx{display:flow-root;width:722px;font:15px/1.6 'Noto Sans Bengali',system-ui,sans-serif;color:#17302a;background:#fff;text-align:left;overflow-wrap:anywhere}h3{font-size:20px;margin-bottom:10px}table{width:100%;border-collapse:collapse;margin-bottom:14px}td{border:1px solid #cfe3d8;padding:5px 10px}.qc{border:1px solid #cfe3d8;border-radius:12px;padding:12px;margin-bottom:12px}.qt{font-size:16px;font-weight:600;margin-bottom:4px}img{display:block;max-width:100%;max-height:360px;margin:6px 0}.op{display:flex;gap:10px;align-items:center;border:1.5px solid #cfe3d8;border-radius:10px;padding:6px 10px;margin:6px 0}.op>span:first-child{flex:none;width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;background:#dff3e9;font-weight:600}.ok{color:#15803d}.op.ok{background:#dcf3e4;border-color:#16a34a}.op.bad{background:#fde3e3;border-color:#dc2626}.ex{margin-top:8px;padding:8px 10px;border-left:4px solid #eab308;background:#fef7d6}`;
+async function pdfImg(im){try{if(!im.src.startsWith('data:')){const b=await(await fetch(im.src)).blob();im.src=await new Promise((ok,no)=>{const f=new FileReader();f.onload=()=>ok(f.result);f.onerror=no;f.readAsDataURL(b)})}await im.decode()}catch(e){im.replaceWith('[ছবি লোড করা যায়নি]')}}
+async function pdfPages(src){const math=[...D.styleSheets].flatMap(s=>{try{return [...s.cssRules]}catch(e){return []}}).filter(r=>/\.m[fr]\b/.test(r.selectorText||'')).map(r=>r.cssText).join(''),css=PCSS+math;
+ const host=D.createElement('div');host.style.cssText='position:fixed;left:-9999px;top:0';D.body.appendChild(host);
+ try{const sr=host.attachShadow({mode:'open'});sr.innerHTML=`<style>:host{all:initial}${css}</style><div class="pdfx"></div>`;const box=sr.querySelector('.pdfx');box.innerHTML=src.innerHTML;
+  await Promise.all([...box.querySelectorAll('img')].map(pdfImg));
+  const {left:x0,top:y0}=box.getBoundingClientRect(),H=Math.ceil(box.getBoundingClientRect().height),top=e=>Math.floor(e.getBoundingClientRect().top-y0),all=s=>[...box.querySelectorAll(s)].map(top);
+  const cards=all('.qc'),blocks=all('.qc,.op,.ex,img,tr,p'),lines=[],tw=D.createTreeWalker(box,4),rg=D.createRange();while(tw.nextNode()){rg.selectNodeContents(tw.currentNode);for(const r of rg.getClientRects())lines.push(Math.floor(r.top-y0))}
+  const words=[],ww=D.createTreeWalker(box,4);while(ww.nextNode()){const n=ww.currentNode;for(const m of n.data.matchAll(/\S+/g)){const sp=/\s/.test(n.data[m.index+m[0].length]||'');
+   const put=(t,q,end)=>words.push({t:t+(end&&sp?' ':''),x:q.left-x0,y:q.top-y0,w:q.width+(end&&sp?q.height*.2:0),h:q.height});
+   rg.setStart(n,m.index);rg.setEnd(n,m.index+m[0].length);const q=rg.getClientRects();if(q.length==1){put(m[0],q[0],1);continue}
+   let i=m.index,cur=null;for(const ch of m[0]){rg.setStart(n,i);rg.setEnd(n,i+=ch.length);const b=rg.getBoundingClientRect();if(cur&&Math.abs(cur.top-b.top)<3){cur.t+=ch;cur.width=b.right-cur.left}else{if(cur)put(cur.t,cur);cur={t:ch,left:b.left,top:b.top,width:b.width,height:b.height}}}if(cur)put(cur.t,cur,1)}}
+  const xml=new XMLSerializer().serializeToString(box).replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,''),max=PH-2*PM,out=[];
+  for(let s=0;s<H;){let e=H;if(H-s>max){const lim=s+max,best=(l,m)=>Math.max(0,...l.filter(y=>y>s+m&&y<=lim));e=best(cards,max*.5)||best(blocks,max*.3)||best(lines,20)||lim}
+   const h=e-s,svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${PW*2}" height="${PH*2}" viewBox="0 0 ${PW} ${PH}"><foreignObject x="${PM}" y="${PM}" width="${PW-2*PM}" height="${h}"><div xmlns="http://www.w3.org/1999/xhtml" style="height:${h}px;overflow:hidden"><style><![CDATA[${css}]]></style><div style="margin-top:-${s}px">${xml}</div></div></foreignObject></svg>`;
+   const im=new Image();im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);await im.decode();
+   const c=D.createElement('canvas');c.width=PW*2;c.height=PH*2;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);out.push({img:c.toDataURL('image/jpeg',.92),text:words.filter(q=>q.y+q.h/2>=s&&q.y+q.h/2<e).map(q=>({...q,y:q.y-s}))});s=e}
+  return out}finally{host.remove()}}
+function pdfBlob(pages){const te=new TextEncoder(),parts=[],off=[],cid=new Map();let len=0;const add=x=>{const b=typeof x=='string'?te.encode(x):x;parts.push(b);len+=b.length},obj=(n,d,st)=>{off[n]=len;add(`${n} 0 obj\n${d}\n`);if(st){add('stream\n');add(st);add('\nendstream\n')}add('endobj\n')},stm=(n,x)=>obj(n,`<</Length ${te.encode(x).length}>>`,x);
+ const h4=v=>v.toString(16).padStart(4,'0'),code=ch=>{if(!cid.has(ch))cid.set(ch,cid.size+1);return h4(cid.get(ch))},f=v=>v.toFixed(2),K=595.28/PW,F=3+pages.length*3;
+ add('%PDF-1.5\n');obj(1,'<</Type/Catalog/Pages 2 0 R>>');obj(2,`<</Type/Pages/Count ${pages.length}/Kids[${pages.map((x,i)=>(3+i*3)+' 0 R').join(' ')}]>>`);
+ pages.forEach((pg,i)=>{const p=3+i*3,j=Uint8Array.from(atob(pg.img.split(',')[1]),c=>c.charCodeAt(0));
+  // পৃষ্ঠার ছবির উপর অদৃশ্য লেখার স্তর — এতে লেখা সিলেক্ট, কপি ও সার্চ করা যায়
+  const tx=pg.text.map(q=>{const ch=[...q.t],fs=q.h*K*.75;return `/F ${f(fs)} Tf ${f(q.w*K/(ch.length*fs*.5)*100)} Tz 1 0 0 1 ${f((PM+q.x)*K)} ${f(841.89-(PM+q.y+q.h*.75)*K)} Tm <${ch.map(code).join('')}> Tj`}).join('\n');
+  obj(p,`<</Type/Page/Parent 2 0 R/MediaBox[0 0 595.28 841.89]/Resources<</XObject<</I ${p+2} 0 R>>/Font<</F ${F} 0 R>>>>/Contents ${p+1} 0 R>>`);stm(p+1,`q 595.28 0 0 841.89 0 0 cm /I Do Q\nBT 3 Tr\n${tx}\nET`);
+  obj(p+2,`<</Type/XObject/Subtype/Image/Width ${PW*2}/Height ${PH*2}/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length ${j.length}>>`,j)});
+ const map=[...cid].map(([ch,n])=>`<${h4(n)}> <${Array.from({length:ch.length},(_,k)=>h4(ch.charCodeAt(k))).join('')}>`);let bf='';for(let i=0;i<map.length;i+=100){const g=map.slice(i,i+100);bf+=`${g.length} beginbfchar\n${g.join('\n')}\nendbfchar\n`}
+ obj(F,`<</Type/Font/Subtype/Type0/BaseFont/Glyphless/Encoding/Identity-H/DescendantFonts[${F+1} 0 R]/ToUnicode ${F+3} 0 R>>`);
+ obj(F+1,`<</Type/Font/Subtype/CIDFontType2/BaseFont/Glyphless/CIDSystemInfo<</Registry(Adobe)/Ordering(Identity)/Supplement 0>>/FontDescriptor ${F+2} 0 R/DW 500/CIDToGIDMap/Identity>>`);
+ obj(F+2,'<</Type/FontDescriptor/FontName/Glyphless/Flags 4/FontBBox[0 -200 500 800]/ItalicAngle 0/Ascent 800/Descent -200/CapHeight 800/StemV 80>>');
+ stm(F+3,`/CIDInit /ProcSet findresource begin\n12 dict begin\nbegincmap\n/CIDSystemInfo <</Registry (Adobe) /Ordering (UCS) /Supplement 0>> def\n/CMapName /Adobe-Identity-UCS def\n/CMapType 2 def\n1 begincodespacerange\n<0000> <FFFF>\nendcodespacerange\n${bf}endcmap\nCMapName currentdict /CMap defineresource pop\nend\nend`);
+ const x=len,n=F+4;add(`xref\n0 ${n}\n0000000000 65535 f \n`+off.slice(1).map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<</Size ${n}/Root 1 0 R>>\nstartxref\n${x}\n%%EOF`);
+ return new Blob(parts,{type:'application/pdf'})}
+async function dlR(id,btn){const r=CT.results.find(x=>x.id==id),o=$('.ov'),c=o.querySelector('.sh').cloneNode(true),nm=(CT.name+'-'+r.name).replace(/[\\\/:*?"<>|\s]+/g,'_')+'.pdf';c.querySelectorAll('.rsb,button').forEach(x=>x.remove());
+ btn.disabled=1;toast('প্রিভিউ তৈরি হচ্ছে…');let imgs;try{imgs=await pdfPages(c)}catch(e){btn.disabled=0;return toast('PDF তৈরি হয়নি — Chrome ব্রাউজারে চেষ্টা করুন')}
+ btn.disabled=0;if(!o.isConnected)return;const url=URL.createObjectURL(pdfBlob(imgs)),v=D.createElement('div');v.className='pdfv';
+ v.innerHTML=`<div class="pdfb"><button class="ob">← Back</button><b>Preview (${imgs.length} পৃষ্ঠা)</b><button class="ob">⬇ Download PDF</button></div><div class="pdfs">${imgs.map(({img:u},i)=>`<img src="${u}" alt="পৃষ্ঠা ${i+1}">`).join('')}</div>`;
+ const [bk,dn]=v.querySelectorAll('button');bk.onclick=()=>{v.remove();URL.revokeObjectURL(url)};dn.onclick=()=>{const a=D.createElement('a');a.href=url;a.download=nm;D.body.appendChild(a);a.click();a.remove()};D.body.appendChild(v)}
+async function delOne(id,b){const t=CT;if(!confirm('এই উত্তরপত্রটি ডিলিট করবেন?'))return;b.disabled=1;
+ try{const x=await api('delRes1',{id:t.id,rid:id});if(x.err){b.disabled=0;return toast(x.err=='unknown action'?'নতুন Code.gs ডিপ্লয় করুন':x.err)}cl();toast('ডিলিট হয়েছে ✔');if(location.hash=='#/t/'+t.id+'/res')adm(t,'res')}catch(e){b.disabled=0;if(e&&e.auth)cl()}}
 function rv(t,qi,a,k,n,u){const q=t.qs[qi];const b=q.t=='mc'?q.o.map((o,j)=>`<div class="op ${q.a.includes(j)?'ok':a&&a.includes&&a.includes(j)?'bad':''}"><span>${j+1}</span>${RT(o)}</div>`).join(''):`<p>Answer: <b>${E(a||'—')}</b></p><p class="ok">Correct: ${E(q.a.join(' / '))}</p>`;
  return `<div class="qc"><div class="qt">${k+1}. ${RT(q.q)}</div>${q.img?`<img src="${E(q.img)}">`:''}${b}${q.e?`<div class="ex">💡 ${RT(q.e)}</div>`:''}${u?`<div class="ex" style="border-color:#64748b">⚪ এই প্রশ্নের উত্তর আপনি মোট <b>${u}</b> বার দেননি${u>1?' (আগে '+(u-1)+' বার)':''}</div>`:''}${n?`<div class="ex" style="border-color:#e5484d">❌ এই প্রশ্নে আপনি মোট <b>${n}</b> বার ভুল করেছেন${n>1?' (আগে '+(n-1)+' বার)':''}</div>`:''}</div>`}
 
